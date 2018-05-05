@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IPG.Projeto.Mobile.Views.ItemsPage"
+              Title="{Binding Title}"
+             x:Name="BrowseItemsPage"
+             NavigationPage.HasNavigationBar="False">
+
+
+    <ContentPage.Content>
+
+        <StackLayout Orientation="Vertical">
+            <SearchBar Placeholder="Procurar" BackgroundColor="{StaticResource Primary}" TextColor="White" TextChanged="SearchBar_TextChanged"></SearchBar>
+
+            
+            <ListView x:Name="ItemsListView" 
+                              ItemsSource="{Binding Items}" 
+                              VerticalOptions="FillAndExpand"
+                              SeparatorColor ="LightGray"
+                              HasUnevenRows="true"
+                              RefreshCommand="{Binding LoadItemsCommand}"
+                              IsPullToRefreshEnabled="true"
+                              IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                              CachingStrategy="RecycleElement"
+                              ItemSelected="OnItemSelected">
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+
+
+
+
+                            <StackLayout Padding="10" Orientation="Horizontal">
+                                <BoxView BackgroundColor="#4CAF50" WidthRequest="5" Margin="0,0,0,0" />
+                                <Grid VerticalOptions="FillAndExpand"
+             Padding="0"
+             HorizontalOptions="FillAndExpand"
+             BackgroundColor="Transparent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                                    
+                                    <StackLayout Orientation="Vertical">
+                                        <Label Text="{Binding Text}" TextColor="#212121" FontSize="17" LineBreakMode="NoWrap"/>
+  
+                                        <StackLayout Orientation="Horizontal">
+                                           
+                                            <Label Text="&#xf133;" TextColor="Gray" FontSize="10">
+                                            <Label.FontFamily>
+                                                <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
+                                            </Label.FontFamily>
+                                            </Label>
+                                            <Label Text="{Binding Date}"  TextColor="Gray" FontSize="10"/>
+
+                                            <Label Text="&#xf1ad;" TextColor="Gray" FontSize="10">
+                                                <Label.FontFamily>
+                                                    <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
+                                                </Label.FontFamily>
+                                            </Label>
+                                            <Label Text="{Binding Council_name}"  TextColor="Gray" FontSize="10"/>
+                                            
+                                            
+                                        </StackLayout>
+                                        
+                                        <BoxView Color="WhiteSmoke" HorizontalOptions="FillAndExpand" HeightRequest="1"/>                                        
+                                        <Label Text="{Binding Description}" Margin="0,0,0,0" TextColor="#777777" HorizontalTextAlignment="Start" FontSize="12" />
+                                    </StackLayout>
+                                    
+                                    <!--<Label Text="{Binding Text}" 
+                       LineBreakMode="NoWrap" 
+                       Style="{DynamicResource ListItemTextStyle}" 
+                       FontSize="16" />-->
+
+                    
+                     <Grid Grid.Row="2" BackgroundColor="WhiteSmoke"   Padding="10">
+                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                             <ColumnDefinition Width="2*"/>
+                             <ColumnDefinition Width="1*" />
+
+                                        </Grid.ColumnDefinitions>
+
+                                        <!--<StackLayout Orientation="Horizontal">-->
+                                        <Label Grid.Column="0" Text="&#xf164; Gosto" TextColor="Gray">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="ListItemComment" />
+                                            </Label.GestureRecognizers>
+
+                                            <Label.FontFamily>
+                                                <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
+                                            </Label.FontFamily>
+                                        </Label>
+
+
+                                        <Label Grid.Column="2" Text="&#xf27a; Comentar" TextColor="Gray">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="ListItemComment" />
+                                            </Label.GestureRecognizers>
+                                            
+                                            <Label.FontFamily>
+                                                    <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
+                                                </Label.FontFamily>
+                                        </Label>
+
+
+                                        <!--</StackLayout>-->
+                         
+                                        <!--<Label Grid.Row="0"  Grid.Column="0"  Text="CardOwner"/>
+                        <Label Grid.Row="0"  Grid.Column="1"  Text="cneas ....."/>-->
+                        
+                    </Grid>
+                </Grid>
+            </StackLayout>
+
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+   
+            
+        </StackLayout>
+
+
+</ContentPage.Content>
+
+</ContentPage>
+
+
+
+
+
+
+<!--<StackLayout >
+    <SearchBar Placeholder="Procurar" BackgroundColor="{StaticResource Primary}" TextColor="White" TextChanged="SearchBar_TextChanged"></SearchBar>
+
+    <StackLayout VerticalOptions="FillAndExpand">
+        -->
+<!--<Grid VerticalOptions = "FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="75" />
+                        <RowDefinition Height="10" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="10" />
+                    </Grid.ColumnDefinitions>-->
+<!--
+
+        <ListView x:Name="ItemsListView" 
+                              ItemsSource="{Binding Items}" 
+                              VerticalOptions="FillAndExpand"  
+                              HasUnevenRows="true"
+                              RefreshCommand="{Binding LoadItemsCommand}"
+                              IsPullToRefreshEnabled="true"
+                              IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                              CachingStrategy="RecycleElement"
+                              ItemSelected="OnItemSelected">
+            -->
+<!--Grid.Row = "0" Grid.Column = "0" Grid.RowSpan = "3" Grid.ColumnSpan = "3"-->
+<!--
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Padding="10" Orientation="Horizontal">
+                            <BoxView BackgroundColor="#4CAF50" WidthRequest="5" Margin="0,0,0,10" />
+                            <StackLayout>
+
+                                <Grid >
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <StackLayout Grid.Row = "0" Grid.ColumnSpan = "3" >
+
+                                        -->
+<!-- Titulo -->
+<!--
+                                        <Label Text="{Binding Text}"
+                                                       LineBreakMode="NoWrap" 
+                                                       Style="{DynamicResource ListItemTextStyle}" 
+                                                       FontSize="16"
+                                                       FontAttributes="Bold">
+                                            <Label.LineBreakMode>
+                                                <OnPlatform x:TypeArguments="LineBreakMode"
+                                                                    Android="NoWrap" iOS="TailTruncation"/>
+                                            </Label.LineBreakMode>
+                                        </Label>
+                                        -->
+<!-- separador -->
+<!--
+                                        <BoxView Color="Gray"   HorizontalOptions="FillAndExpand" HeightRequest="1"/>
+                                        -->
+<!-- Descricao -->
+<!--
+                                        <Label Text="{Binding Description}" 
+                                                       LineBreakMode="NoWrap" Grid.Row="0" Grid.Column="1"
+                                                       Style="{DynamicResource ListItemDetailTextStyle}"
+                                                       FontSize="13" 
+                                                       TextColor="Gray" />
+
+
+                                        -->
+<!--<Grid Grid.Row="1"  BackgroundColor="Transparent"  Padding="4">
+       
+                                                        <Label Grid.Row="0"  Grid.Column="0"  Text="CardOwner"/>
+
+                                                    </Grid>-->
+<!--
+
+
+
+                                    </StackLayout>
+
+
+
+                                </Grid>
+                            </StackLayout>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        -->
+<!--<OnPlatform x:TypeArguments="View">
+                        <OnPlatform.iOS>
+                            <Button  WidthRequest="20" HeightRequest="20" BackgroundColor="Transparent" BorderRadius="40" Image="IconFAB.png" Grid.Row="1" Grid.Column = "1" Clicked="AddItem_Clicked" />
+
+                        </OnPlatform.iOS>
+                        <OnPlatform.Android>
+                            <Button  WidthRequest="20" HeightRequest="20" BackgroundColor="{StaticResource PrimaryDark}" BorderRadius="40" Image="ic_add_alert_white_36pt.png" Grid.Row="1" Grid.Column = "1" Clicked="AddItem_Clicked" />
+
+                        </OnPlatform.Android>
+                    </OnPlatform>-->
+<!--</Grid>-->
+<!--
+
+    </StackLayout>
+
+</StackLayout>-->

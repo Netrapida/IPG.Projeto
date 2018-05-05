@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="IPG.Projeto.Mobile.Views.NewItemPage"
+		     Title="New Item">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Save" Clicked="Save_Clicked" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout Spacing="20" Padding="15">
+            <Label Text="Text" FontSize="Medium" />
+            <Entry Text="{Binding Item.Text}" FontSize="Small" />
+            <Label Text="Description" FontSize="Medium" />
+            <Editor Text="{Binding Item.Description}" FontSize="Small" Margin="0" />
+
+            <Label Text="Lat:" FontSize="Medium" />
+            <Label Text="{Binding Item.Position.Latitude}" FontSize="Small"/>
+            <Label Text="Long:" FontSize="Medium" />
+            <Label Text="{Binding Item.Position.Longitude}" FontSize="Small"/>
+
+            <Label Text="Date:" FontSize="Medium" />
+            <Label Text="{Binding Item.Date}" FontSize="Small"/>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

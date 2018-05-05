@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IPG.Projeto.Mobile.Views.LoginPage"
+             xmlns:viewModels="clr-namespace:IPG.Projeto.Mobile.ViewModels;assembly=IPG.Projeto.Mobile"
+             Title="Login"
+             NavigationPage.HasNavigationBar="false">
+    
+    <!-- Binding para o viewModel -->
+    <ContentPage.BindingContext>
+        <viewModels:LoginViewModel/>
+    </ContentPage.BindingContext>
+    <!-- END Binding para o viewModel -->
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackLayout BackgroundColor="{StaticResource Accent}" VerticalOptions="FillAndExpand" HorizontalOptions="Fill">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" VerticalOptions="Center">
+                <ContentView Padding="0,40,0,40" VerticalOptions="FillAndExpand">
+                    <Image Source="xamarin_logo.png" VerticalOptions="Center" HeightRequest="64" />
+                </ContentView>
+            </StackLayout>
+        </StackLayout>
+
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
+                <Label FontSize="20">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="IPG Projeto" FontAttributes="Bold" FontSize="22" />
+                                <Span Text=" " />
+                                <Span Text="1.0 " ForegroundColor="{StaticResource LightTextColor}" />
+                                <Span Text="Developer Mode" FontAttributes="Italic" ForegroundColor="{StaticResource LightTextColor}" />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                
+                <!-- Login binding para receber do client -->
+                <Entry Text="{Binding Username}" Placeholder="Username" />
+                <Entry IsPassword="true" Text="{Binding Password}" Placeholder="Password" />
+                <Button Margin="0,10,0,50" Text="Click Here To Log In" Command="{Binding LoginCommand}" BackgroundColor="{StaticResource Primary}" TextColor="White" />
+                <!--END Login binding para receber do client -->
+
+                <!--<ProgressBar x:Name="progressBar"
+             Visibility="{Binding Path=LoginInProgress, Mode=OneWay, Converter="{StaticResource BooleanToVisibilityConverter}"}"
+             /></ProgressBar>-->
+
+               
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="This app is written in C# and native APIs using the" />
+                                <Span Text=" " />
+                                <Span Text="Xamarin Platform" FontAttributes="Bold" />
+                                <Span Text="." />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span Text="It shares code with its" />
+                                <Span Text=" " />
+                                <Span Text="iOS, Android, and Windows" FontAttributes="Bold" />
+                                <Span Text=" " />
+                                <Span Text="versions." />
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+
+            </StackLayout>
+
+        </ScrollView>
+    </Grid>
+</ContentPage>
