@@ -32,7 +32,7 @@ namespace IPG.Projeto.API
             // Configurando o uso da classe de contexto para
             // acesso às tabelas do ASP.NET Identity Core
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("BaseIdentity")));
+                options.UseNpgsql(Configuration.GetConnectionString("BaseIdentity")));
 
             // Ativando a utilização do ASP.NET Identity, a fim de
             // permitir a recuperação de seus objetos via injeção de

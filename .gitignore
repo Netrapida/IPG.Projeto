@@ -3,3 +3,15 @@
 ################################################################################
 
 /BACKUP
+/IPG.Projeto.API/bin
+/IPG.Projeto.API/obj
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile/bin/Debug/netstandard2.0
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile.Android/bin/Debug
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile.Android/obj
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile.iOS/bin/iPhoneSimulator/Debug
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile.iOS/obj
+/IPG.Projeto.MVC/bin/Debug/netcoreapp2.0
+/IPG.Projeto.MVC/node_modules
+/IPG.Projeto.MVC/obj
+/IPG.Projeto.Mobile/IPG.Projeto.Mobile/obj
+/.vs
