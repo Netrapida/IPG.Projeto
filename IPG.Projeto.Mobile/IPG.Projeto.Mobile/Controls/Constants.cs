@@ -6,7 +6,7 @@ namespace IPG.Projeto.Mobile
 {
     public class Constants
     {
-        public static string BaseApiAddress => "http://192.168.1.68:56700";  // Development Mode Alterar depois
+        public static string BaseApiAddress => "http://problemas.online";  // Development Mode Alterar depois
     }
   
 }

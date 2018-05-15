@@ -38,7 +38,6 @@ namespace IPG.Projeto.Mobile
             else
             {   //Primeiro Login na app
                 MainPage = new NavigationPage(new MainPage()); 
-             
             }
         }
 
