@@ -62,17 +62,27 @@ namespace IPG.Projeto.Mobile.Services
 
                 var client = new HttpClient();
                 var response = await client.SendAsync(request);
-
                 var content = await response.Content.ReadAsStringAsync();
 
                 JObject jwtDynamic = JsonConvert.DeserializeObject<JObject>(content);
-
                 var accessTokenExpiration = jwtDynamic.Value<DateTime>("expiration");
                 var accessToken = jwtDynamic.Value<string>("accessToken");
 
                 Settings.AccessTokenExpirationDate = accessTokenExpiration;
 
-            
+            if (!string.IsNullOrEmpty(accessToken))
+            {   
+                    // primeiro Login Na applicação .. autenticaçºao válida
+                    if (string.IsNullOrEmpty(Settings.Username)){ 
+                        Settings.Username = userName;
+                        Settings.Password = password;
+                        App.Current.MainPage = new NavigationPage(new MainPage());
+                    }// Só deve ser executado uma única vez.. ou quando for desinstalada a app
+
+            }else
+            {
+            UserDialogs.Instance.Alert("Login Failed...");
+            }
 
 
 

@@ -32,23 +32,6 @@ namespace IPG.Projeto.Mobile.ViewModels
                         {
                             var accesstoken = await _apiServices.LoginAsync(Username, Password);
                             Settings.AccessToken = accesstoken;
-
-                            if (string.IsNullOrEmpty(accesstoken))
-                            {
-                                UserDialogs.Instance.Alert("Login Failed...");
-                            }
-
-                            //else 
-                            //{ // primeiro Login
-                            //    if (!string.IsNullOrEmpty(Settings.Username))
-                            //    { Settings.Username = Username;
-                            //        Settings.Password = Password;
-                            //        // problema com Separation of Con. MVVM!!!!
-                            //        App.Current.MainPage = new NavigationPage(new MainPage());
-                            //    }
-
-                            //}
-
                         }
                     }
                     catch (Exception)
