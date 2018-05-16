@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IPG.Projeto.MVC.Data;
 using IPG.Projeto.MVC.Models;
 using IPG.Projeto.MVC.Services;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace IPG.Projeto.MVC
 {
@@ -59,6 +60,10 @@ namespace IPG.Projeto.MVC
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            // https redirect Issue #10
+            var options = new RewriteOptions().AddRedirectToHttps();
+
+            app.UseRewriter(options);
 
             app.UseStaticFiles();
 
