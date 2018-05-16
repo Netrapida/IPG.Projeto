@@ -60,10 +60,7 @@ namespace IPG.Projeto.MVC
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            // https redirect Issue #10
-            var options = new RewriteOptions().AddRedirectToHttps();
-
-            app.UseRewriter(options);
+            
 
             app.UseStaticFiles();
 
