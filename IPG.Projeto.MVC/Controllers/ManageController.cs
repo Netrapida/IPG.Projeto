@@ -61,6 +61,8 @@ namespace IPG.Projeto.MVC.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
+                RegisterDate = user.RegisterDate,
+                ProfilePicture = user.ProfilePicture,
                 StatusMessage = StatusMessage
             };
 

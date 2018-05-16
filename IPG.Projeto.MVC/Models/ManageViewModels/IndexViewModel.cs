@@ -17,9 +17,15 @@ namespace IPG.Projeto.MVC.Models.ManageViewModels
         public string Email { get; set; }
 
         [Phone]
-        [Display(Name = "Phone number")]
+        [Display(Name = "Número de contacto")]
         public string PhoneNumber { get; set; }
 
         public string StatusMessage { get; set; }
+
+        //profile -------------------------------
+        [Display(Name = "Data de registo")]
+        public DateTime RegisterDate { get; set; }
+        [Display(Name = "Foto de Perfil")]
+        public string ProfilePicture { get; set; }
     }
 }
