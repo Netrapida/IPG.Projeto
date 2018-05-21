@@ -1,0 +1,129 @@
+﻿@model IPG.Projeto.MVC.Models.Problem
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Problem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Latitude" class="control-label"></label>
+                <input asp-for="Latitude" class="form-control" />
+                <span asp-validation-for="Latitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Longitude" class="control-label"></label>
+                <input asp-for="Longitude" class="form-control" />
+                <span asp-validation-for="Longitude" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Text" class="control-label"></label>
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Detail" class="control-label"></label>
+                <input asp-for="Detail" class="form-control" />
+                <span asp-validation-for="Detail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Anonymous" /> @Html.DisplayNameFor(model => model.Anonymous)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReportDate" class="control-label"></label>
+                <input asp-for="ReportDate" class="form-control" />
+                <span asp-validation-for="ReportDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastUpdate" class="control-label"></label>
+                <input asp-for="LastUpdate" class="form-control" />
+                <span asp-validation-for="LastUpdate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WhenSentDate" class="control-label"></label>
+                <input asp-for="WhenSentDate" class="form-control" />
+                <span asp-validation-for="WhenSentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Flagged" /> @Html.DisplayNameFor(model => model.Flagged)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="SendFailCount" class="control-label"></label>
+                <input asp-for="SendFailCount" class="form-control" />
+                <span asp-validation-for="SendFailCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SenDFailReason" class="control-label"></label>
+                <input asp-for="SenDFailReason" class="form-control" />
+                <span asp-validation-for="SenDFailReason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SendFailDate" class="control-label"></label>
+                <input asp-for="SendFailDate" class="form-control" />
+                <span asp-validation-for="SendFailDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Counter" class="control-label"></label>
+                <input asp-for="Counter" class="form-control" />
+                <span asp-validation-for="Counter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Public" /> @Html.DisplayNameFor(model => model.Public)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"></label>
+                <input asp-for="State" class="form-control" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Deleted" /> @Html.DisplayNameFor(model => model.Deleted)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUserID" class="control-label"></label>
+                <select asp-for="ApplicationUserID" class ="form-control" asp-items="ViewBag.ApplicationUserID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CouncilID" class="control-label"></label>
+                <select asp-for="CouncilID" class ="form-control" asp-items="ViewBag.CouncilID"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

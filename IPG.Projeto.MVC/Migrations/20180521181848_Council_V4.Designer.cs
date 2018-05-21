@@ -11,8 +11,8 @@ using System;
 namespace IPG.Projeto.MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180505184119_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20180521181848_Council_V4")]
+    partial class Council_V4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,10 +31,18 @@ namespace IPG.Projeto.MVC.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("DisplayName");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<int?>("Facebook_id");
+
+                    b.Property<bool>("Flagged");
+
+                    b.Property<int>("From_Council");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -51,6 +59,10 @@ namespace IPG.Projeto.MVC.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("ProfilePicture");
+
+                    b.Property<DateTime>("RegisterDate");
 
                     b.Property<string>("SecurityStamp");
 
@@ -69,6 +81,116 @@ namespace IPG.Projeto.MVC.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("IPG.Projeto.MVC.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Anonymous");
+
+                    b.Property<string>("ApplicationUserID");
+
+                    b.Property<DateTime>("CommentDate");
+
+                    b.Property<int>("Council");
+
+                    b.Property<string>("Photo");
+
+                    b.Property<int>("ProblemID");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("ProblemID");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("IPG.Projeto.MVC.Models.Council", b =>
+                {
+                    b.Property<int>("CouncilID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("Email");
+
+                    b.Property<string>("ExternalUrl");
+
+                    b.Property<int>("Id");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Reported");
+
+                    b.Property<int>("ReportedFix");
+
+                    b.HasKey("CouncilID");
+
+                    b.ToTable("Council");
+                });
+
+            modelBuilder.Entity("IPG.Projeto.MVC.Models.Problem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Anonymous");
+
+                    b.Property<string>("ApplicationUserID");
+
+                    b.Property<int>("CouncilID");
+
+                    b.Property<int>("Counter");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("Detail")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("Flagged");
+
+                    b.Property<DateTime?>("LastUpdate");
+
+                    b.Property<double>("Latitude");
+
+                    b.Property<double>("Longitude");
+
+                    b.Property<string>("Photo");
+
+                    b.Property<bool>("Public");
+
+                    b.Property<DateTime>("ReportDate");
+
+                    b.Property<string>("SenDFailReason");
+
+                    b.Property<int>("SendFailCount");
+
+                    b.Property<DateTime?>("SendFailDate");
+
+                    b.Property<int>("State");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(180);
+
+                    b.Property<DateTime?>("WhenSentDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserID");
+
+                    b.HasIndex("CouncilID");
+
+                    b.ToTable("Problems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -176,6 +298,30 @@ namespace IPG.Projeto.MVC.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("IPG.Projeto.MVC.Models.Comment", b =>
+                {
+                    b.HasOne("IPG.Projeto.MVC.Models.ApplicationUser", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("IPG.Projeto.MVC.Models.Problem", "Problem")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProblemID")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("IPG.Projeto.MVC.Models.Problem", b =>
+                {
+                    b.HasOne("IPG.Projeto.MVC.Models.ApplicationUser", "User")
+                        .WithMany("Problems")
+                        .HasForeignKey("ApplicationUserID");
+
+                    b.HasOne("IPG.Projeto.MVC.Models.Council", "Council")
+                        .WithMany("Problems")
+                        .HasForeignKey("CouncilID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

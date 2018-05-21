@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace IPG.Projeto.MVC.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Council_V1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,8 +30,12 @@ namespace IPG.Projeto.MVC.Migrations
                     Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
+                    DisplayName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
+                    Facebook_id = table.Column<int>(nullable: true),
+                    Flagged = table.Column<bool>(nullable: false),
+                    From_Council = table.Column<int>(nullable: false),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
@@ -39,6 +43,8 @@ namespace IPG.Projeto.MVC.Migrations
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    ProfilePicture = table.Column<string>(nullable: true),
+                    RegisterDate = table.Column<DateTime>(nullable: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true)
@@ -46,6 +52,25 @@ namespace IPG.Projeto.MVC.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Council",
+                columns: table => new
+                {
+                    AreaID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Deleted = table.Column<bool>(nullable: false),
+                    Email = table.Column<string>(nullable: true),
+                    ExternalUrl = table.Column<string>(nullable: true),
+                    Id = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Reported = table.Column<int>(nullable: false),
+                    ReportedFix = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Council", x => x.AreaID);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,6 +179,80 @@ namespace IPG.Projeto.MVC.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Problems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Anonymous = table.Column<bool>(nullable: false),
+                    ApplicationUserID = table.Column<string>(nullable: true),
+                    CouncilID = table.Column<int>(nullable: false),
+                    Counter = table.Column<int>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false),
+                    Detail = table.Column<string>(maxLength: 500, nullable: false),
+                    Flagged = table.Column<bool>(nullable: false),
+                    LastUpdate = table.Column<DateTime>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false),
+                    Photo = table.Column<string>(nullable: true),
+                    Public = table.Column<bool>(nullable: false),
+                    ReportDate = table.Column<DateTime>(nullable: false),
+                    SenDFailReason = table.Column<string>(nullable: true),
+                    SendFailCount = table.Column<int>(nullable: false),
+                    SendFailDate = table.Column<DateTime>(nullable: true),
+                    State = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(maxLength: 180, nullable: false),
+                    WhenSentDate = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Problems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Problems_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Problems_Council_CouncilID",
+                        column: x => x.CouncilID,
+                        principalTable: "Council",
+                        principalColumn: "AreaID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    Anonymous = table.Column<bool>(nullable: false),
+                    ApplicationUserID = table.Column<string>(nullable: true),
+                    CommentDate = table.Column<DateTime>(nullable: false),
+                    Council = table.Column<int>(nullable: false),
+                    Photo = table.Column<string>(nullable: true),
+                    ProblemID = table.Column<int>(nullable: false),
+                    Text = table.Column<string>(maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comments_Problems_ProblemID",
+                        column: x => x.ProblemID,
+                        principalTable: "Problems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -190,6 +289,26 @@ namespace IPG.Projeto.MVC.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ApplicationUserID",
+                table: "Comments",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_ProblemID",
+                table: "Comments",
+                column: "ProblemID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Problems_ApplicationUserID",
+                table: "Problems",
+                column: "ApplicationUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Problems_CouncilID",
+                table: "Problems",
+                column: "CouncilID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -210,10 +329,19 @@ namespace IPG.Projeto.MVC.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Problems");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Council");
         }
     }
 }

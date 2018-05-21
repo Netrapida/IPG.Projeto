@@ -26,7 +26,7 @@ namespace IPG.Projeto.Mobile.Views
 
         async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
         {
-            var item = args.SelectedItem as Item;
+            var item = args.SelectedItem as Pin;
             if (item == null)
                 return;
             await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
@@ -60,8 +60,9 @@ namespace IPG.Projeto.Mobile.Views
         }
 
         private void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        {   viewModel.Search = true;
             ItemsListView.BeginRefresh();
+
             if (string.IsNullOrWhiteSpace(e.NewTextValue))
                 ItemsListView.ItemsSource = viewModel.Items;/*.OrderByDescending(Item => Item.Date);*/
             else

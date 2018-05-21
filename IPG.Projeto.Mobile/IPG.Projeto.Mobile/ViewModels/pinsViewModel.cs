@@ -13,28 +13,28 @@ using Acr.UserDialogs;
 using Entry = Microcharts.Entry;
 using SkiaSharp;
 using Microcharts;
+using IPG.Projeto.Mobile.Helper;
+using IPG.Projeto.Mobile.Services;
 
 namespace IPG.Projeto.Mobile.ViewModels
 {
 
     public class PinsViewModel : BaseViewModel
     {
-        public ObservableCollection<Item> Items { get; set; }
+        public ObservableCollection<Pin> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         public Command LoadMeCommand { get; set; }
         public ObservableCollection<Stats> Statistics { get; set; } // testes
 
 
-    public PinsViewModel()
+        public PinsViewModel()
         {
-            Items = new ObservableCollection<Item>();
+            Items = new ObservableCollection<Pin>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-            MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", (obj, item) =>
+            MessagingCenter.Subscribe<NewItemPage, Pin>(this, "AddItem", (obj, item) =>
             {
-                var _item = item as Item;
+                var _item = item as Pin;
                 Items.Add(_item); // refresh pinos sem adicionar novo na lista evitar duplicação
-
-
             });
            
             LoadMeCommand = new Command(async () => await ExecuteLoadMeCommand()); //me 
@@ -175,11 +175,11 @@ namespace IPG.Projeto.Mobile.ViewModels
                     var me = await Utils.GetCurrentPosition();
                     MapRegion = MapSpan.FromCenterAndRadius(new Position(me.Latitude, me.Longitude), Distance.FromKilometers(2));
 
-                    UserDialogs.Instance.Loading("Informação adicional...");
+                    UserDialogs.Instance.Loading("Informações sobre a minha localização...");
                     var info = await Utils.RefreshDataAsync(me);
-                    MyPositionCouncil_1 = info.CouncilInfo[1].name;
-                    MyPositionCouncil_0 = info.CouncilInfo[0].name;
-
+                    MyPositionCouncil_1 = info.CouncilInfo[1].Name;
+                    MyPositionCouncil_0 = info.CouncilInfo[0].Name;
+                    
                 }
    
             }
@@ -193,7 +193,22 @@ namespace IPG.Projeto.Mobile.ViewModels
                 IsBusy = false;
             }
         }
+
+        //private async Task<bool> GetMyItems(RootCouncil info)
+        //{
+        //    var json = await _apiServices.GetPinsAsync(info.CouncilInfo[0].Id.ToString(), Settings.AccessToken);
+        //    foreach (var pin in json)
+        //    {
+        //        pin.Position = new Position(pin.Latitude, pin.Longitude);
+        //        pins.Add(pin);
+        //    }
+        //    return await Task.FromResult(true);
+        //}
+
+      
         // layout binding------------------------------------------------------------
+
+
 
         // maps council cenas !!!!!!!!!!!!!!!!!!!!!!! REVER COLOCAR numa  LIST<string>
         string myPositionCouncil_0 = string.Empty;

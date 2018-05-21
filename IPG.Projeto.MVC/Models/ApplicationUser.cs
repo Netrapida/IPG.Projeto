@@ -19,7 +19,18 @@ namespace IPG.Projeto.MVC.Models
         public string ProfilePicture { get; set; }
         public bool Flagged { get; set; }
         public int From_Council { get; set; }
-        public int Facebook_id { get; set; }
+        public int? Facebook_id { get; set; }
+
+        public ICollection<Problem> Problems { get; set; }
+        public ICollection<Comment> Comments { get; set; }  
+
+        public ApplicationUser() // construtor default
+        {
+            Flagged = false;
+            From_Council = 0;
+            RegisterDate = DateTime.Now;
+        }
+
 
     }
 }

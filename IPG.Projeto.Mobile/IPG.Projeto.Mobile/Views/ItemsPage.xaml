@@ -32,7 +32,7 @@
 
 
                             <StackLayout Padding="10" Orientation="Horizontal">
-                                <BoxView BackgroundColor="#4CAF50" WidthRequest="5" Margin="0,0,0,0" />
+                                <BoxView BackgroundColor="{Binding StatusColor}" WidthRequest="5" Margin="0,0,0,0" />
                                 <Grid VerticalOptions="FillAndExpand"
              Padding="0"
              HorizontalOptions="FillAndExpand"
@@ -53,20 +53,20 @@
                                                 <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
                                             </Label.FontFamily>
                                             </Label>
-                                            <Label Text="{Binding Date}"  TextColor="Gray" FontSize="10"/>
+                                            <Label Text="{Binding ReportDate}"  TextColor="Gray" FontSize="10"/>
 
                                             <Label Text="&#xf1ad;" TextColor="Gray" FontSize="10">
                                                 <Label.FontFamily>
                                                     <OnPlatform x:TypeArguments="x:String" Android="fa-regular-400.ttf#Font Awesome 5 Free Regular" iOS="Font Awesome 5 Free"/>
                                                 </Label.FontFamily>
                                             </Label>
-                                            <Label Text="{Binding Council_name}"  TextColor="Gray" FontSize="10"/>
+                                            <Label Text="{Binding Council.Name}"  TextColor="Gray" FontSize="10"/>
                                             
                                             
                                         </StackLayout>
                                         
                                         <BoxView Color="WhiteSmoke" HorizontalOptions="FillAndExpand" HeightRequest="1"/>                                        
-                                        <Label Text="{Binding Description}" Margin="0,0,0,0" TextColor="#777777" HorizontalTextAlignment="Start" FontSize="12" />
+                                        <Label Text="{Binding Detail}" Margin="0,0,0,0" TextColor="#777777" HorizontalTextAlignment="Start" FontSize="12" />
                                     </StackLayout>
                                     
                                     <!--<Label Text="{Binding Text}" 

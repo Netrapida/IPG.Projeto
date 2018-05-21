@@ -69,7 +69,7 @@ namespace IPG.Projeto.Mobile.Views
         }
 
 
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
             if (viewModel.Items.Count == 0)
@@ -78,7 +78,7 @@ namespace IPG.Projeto.Mobile.Views
         }
      
 
-        private ObservableCollection<TKCustomMapPin> AddPinos(List<Item> items)
+        private ObservableCollection<TKCustomMapPin> AddPinos(List<Pin> items)
         {
             try
             {

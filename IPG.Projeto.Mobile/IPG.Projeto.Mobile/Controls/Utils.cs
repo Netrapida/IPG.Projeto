@@ -1,4 +1,5 @@
 ﻿using IPG.Projeto.Mobile.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
@@ -79,9 +80,6 @@ namespace IPG.Projeto.Mobile.Controls
             {
                 var locator = CrossGeolocator.Current;
                 locator.DesiredAccuracy = 3;
-
-
-
                 if (!locator.IsGeolocationAvailable || !locator.IsGeolocationEnabled)
                 {
                     //not available or enabled
@@ -96,12 +94,12 @@ namespace IPG.Projeto.Mobile.Controls
                 {
 
                     //CACHE POS...
-                    position = await locator.GetLastKnownLocationAsync();
-                    if (position != null)
-                    {
-                        //got a cahched position, so let's use it.
-                        return position;
-                    }
+                    //position = await locator.GetLastKnownLocationAsync();
+                    //if (position != null)
+                    //{
+                    //    //got a cahched position, so let's use it.
+                    //    return position;
+                    //}
                 }
 
             }
@@ -118,48 +116,38 @@ namespace IPG.Projeto.Mobile.Controls
         }
 
         // receber mais info sobre local ond estou
-        public static async Task<RootCouncil> RefreshDataAsync(Position me)
+        public static async Task<RootCouncil> RefreshDataAsync(Position me)// receber mais info sobre local ond estou
         {
             var result = new RootCouncil();
             result.CouncilInfo = new List<Council>();
-
             var _latitude = string.Format("{0:f6}", me.Latitude).Replace(",", ".");
             var _longitude = string.Format("{0:f6}", me.Longitude).Replace(",", ".");
 
-            var uri = new Uri("http://mapas.distrito.pt/point/4326/" + _longitude + "," + _latitude + "?type=O07,O08");
+            var uri = new Uri(Constants.BaseApiAddress + ":56700/api/Entidades/" + _longitude + "," + _latitude);
             HttpClient myClient = new HttpClient();
 
             var response = await myClient.GetAsync(uri);
             if (response.IsSuccessStatusCode)
             {
+                // lista de Councils com informação relevante
                 var json = await response.Content.ReadAsStringAsync();
-                var jo = JObject.Parse(json);
-                if (jo.HasValues)
-                {
-                    var jp = jo.Properties().First();
-                    foreach (var prop in jo.Properties())
-                    {
-                        var p = prop.Value.ToObject<Council>();
-                        result.CouncilInfo.Add(p);
-                    }
-
-                return result;
-                }
+                var Councils = JsonConvert.DeserializeObject<RootCouncil>(json);
+                return Councils;
             }
-        return result;
+            return result;
         }
 
 
-        // stuff com Json .. problema no mapas.distrito. a posição lat long recebe json manhoso
-        public static class JsonUtil
-        {
-            public static T Deserialize<T>(string json, bool ignoreRoot) where T : class
-            {
-                return ignoreRoot
-                    ? JObject.Parse(json)?.Properties()?.First()?.Value?.ToObject<T>()
-                    : JObject.Parse(json)?.ToObject<T>();
-            }
-        }
+        //// stuff com Json .. problema no mapas.distrito. a posição lat long recebe json manhoso
+        //public static class JsonUtil
+        //{
+        //    public static T Deserialize<T>(string json, bool ignoreRoot) where T : class
+        //    {
+        //        return ignoreRoot
+        //            ? JObject.Parse(json)?.Properties()?.First()?.Value?.ToObject<T>()
+        //            : JObject.Parse(json)?.ToObject<T>();
+        //    }
+        //}
 
 
     }

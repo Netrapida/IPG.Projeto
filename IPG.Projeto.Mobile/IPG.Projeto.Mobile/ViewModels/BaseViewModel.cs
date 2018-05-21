@@ -13,7 +13,7 @@ namespace IPG.Projeto.Mobile.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>() ?? new MockDataStore();
+        public IDataStore<Pin> DataStore => DependencyService.Get<IDataStore<Pin>>() ?? new MockDataStore();
 
         MapSpan _mapRegion = MapSpan.FromCenterAndRadius(new Position(40.7142700, -74.0059700), Distance.FromKilometers(2));
 

@@ -6,8 +6,8 @@ namespace IPG.Projeto.Mobile.ViewModels
 {
     public class ItemDetailViewModel : BaseViewModel
     {
-        public Item Item { get; set; }
-        public ItemDetailViewModel(Item item = null)
+        public Pin Item { get; set; }
+        public ItemDetailViewModel(Pin item = null)
         {
             Title = item?.Text;
             Item = item;

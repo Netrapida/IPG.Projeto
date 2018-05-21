@@ -12,6 +12,7 @@ using IPG.Projeto.MVC.Data;
 using IPG.Projeto.MVC.Models;
 using IPG.Projeto.MVC.Services;
 using Microsoft.AspNetCore.Rewrite;
+using System.Globalization;
 
 namespace IPG.Projeto.MVC
 {
@@ -50,6 +51,11 @@ namespace IPG.Projeto.MVC
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseRequestLocalization();
+            // double com dot para as latitudes longitudes
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();

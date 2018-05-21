@@ -99,6 +99,7 @@ namespace IPG.Projeto.API
             // Criação de estruturas, usuários e permissões
             // na base do ASP.NET Identity Core (caso ainda não
             // existam)
+            // REVER se quero registo na APP xamarin?????
             new IdentityInitializer(context, userManager, roleManager)
                 .Initialize();
 

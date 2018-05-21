@@ -10,19 +10,25 @@ using System.Threading.Tasks;
 using Plugin.Geolocator;
 using System.Diagnostics;
 using Acr.UserDialogs;
+using IPG.Projeto.Mobile.Services;
+using IPG.Projeto.Mobile.Controls;
+using IPG.Projeto.Mobile.Helper;
 
 namespace IPG.Projeto.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NewItemPage : ContentPage
     {
-        public Item Item { get; set; }
-        Position position;
+        public Pin Pin { get; set; }
+        public Problem  Problem { get; set; }
+        public Council Council { get; set; }
+
+
+        ApiServices _apiServices = new ApiServices();
 
         public NewItemPage()
         {
             InitializeComponent();
-
         }
 
 
@@ -31,75 +37,64 @@ namespace IPG.Projeto.Mobile.Views
 
             using (UserDialogs.Instance.Loading("Posição..."))
             {
-                position = await GetCurrentPosition();
-                if (string.IsNullOrEmpty(position.ToString()))
+                var me = await Utils.GetCurrentPosition();
+                if (string.IsNullOrEmpty(me.ToString()))
                 {
                     UserDialogs.Instance.Alert("Fail...");
                 }
+                var info = await Utils.RefreshDataAsync(me);
 
-                Item = new Item
+                Council = new Council
                 {
-                    Text = "Item name",
-                    Description = "This is an item description.",
-                    Position = new TK.CustomMap.Position(position.Latitude, position.Longitude),
-                    ShowCallout = true,
-                    Date = DateTime.Now,
-                    // DefaultPinColor = Color.Green,
+                    Name = info.CouncilInfo[0].Name
                 };
 
+                Pin = new Pin // para colocar logon o Pin
+                {
+                    Position = new TK.CustomMap.Position(me.Latitude, me.Longitude),
+                    Council_name = Council.Name,
+                    StatusColor = "#f44336",
+                };
+
+                Problem = new Problem  // default Problem construção da view (ALTERAR para  VIEWMODEL)!
+                {
+                    CouncilID = info.CouncilInfo[0].Id,
+                    Latitude = me.Latitude,
+                    Longitude = me.Longitude,
+                    Text = "Colocar Título de Problema",
+                    Detail = "Uma Descrição Detalhada do Problema",
+                    ReportDate = DateTime.Now,
+
+                };
                 BindingContext = this;
             }
-           
 
         }
 
-
-
-        public static async Task<Position> GetCurrentPosition()
-        {
-            Position position = null;
-            try
-            {
-                var locator = CrossGeolocator.Current;
-                locator.DesiredAccuracy = 3;
-
-                // CACHE POS...
-                //position = await locator.GetLastKnownLocationAsync();
-                //if (position != null)
-                //{
-                //    //got a cahched position, so let's use it.
-                //    return position;
-                //}
-
-                if (!locator.IsGeolocationAvailable || !locator.IsGeolocationEnabled)
-                {
-                    //not available or enabled
-                    return null;
-                }
-
-                position = await locator.GetPositionAsync(TimeSpan.FromSeconds(5), null, true);
-
-            }
-            catch (Exception ex)
-            {
-                //Debug.WriteLine("Unable to get location: " + ex);
-            }
-
-            if (position == null)
-                return null;
-
-            
-            return position;
-        }
-
-
-
+     
         async void Save_Clicked(object sender, EventArgs e)
         {
-            Item.Title = Item.Text;
-            Item.Subtitle = Item.Description;
-            MessagingCenter.Send(this, "AddItem", Item);
+            // updates do Pino e Problem com informações introduzidas pelo user
+            Pin.Title = Problem.Text;
+            Pin.Text = Problem.Text;
+            Pin.Detail = Problem.Detail; // Rever !!! utilizar+ foto
+
+            Problem.Text = Problem.Text;
+            Problem.Detail = Problem.Detail;
+
+
+            MessagingCenter.Send(this, "AddItem", Pin);
+
+            using (UserDialogs.Instance.Loading("Enviar problema..."))
+            {
+                await _apiServices.PostProblemAsync(Problem, Settings.AccessToken);
+                Task.Delay(3000).Wait(); // simular tempo de envio da foto
+            }
+            
+            UserDialogs.Instance.Alert("O seu problema foi enviado com sucesso, será encaminhado para :"+ Council.Name);
             await Navigation.PopModalAsync();
         }
+
+
     }
 }

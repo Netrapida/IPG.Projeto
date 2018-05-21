@@ -19,5 +19,7 @@ namespace IPG.Projeto.API.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Problem> Problems { get; set; }
     }
 }

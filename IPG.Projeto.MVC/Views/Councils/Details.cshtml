@@ -1,0 +1,60 @@
+﻿@model IPG.Projeto.MVC.Models.Council
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Council</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reported)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reported)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReportedFix)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReportedFix)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deleted)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Deleted)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExternalUrl)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ExternalUrl)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.CouncilID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

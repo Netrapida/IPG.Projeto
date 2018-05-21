@@ -18,8 +18,8 @@ namespace IPG.Projeto.Mobile.Services
 {
     internal class ApiServices
     {
-        public async Task<bool> RegisterUserAsync(
-            string email, string password, string confirmPassword)
+
+        public async Task<bool> RegisterUserAsync(string email, string password, string confirmPassword)
         {
             var client = new HttpClient();
 
@@ -49,120 +49,58 @@ namespace IPG.Projeto.Mobile.Services
 
         public async Task<string> LoginAsync(string userName, string password)
         {
-                JObject oJsonObject = new JObject();
-                oJsonObject.Add("userID", userName);
-                oJsonObject.Add("password", password);
-                oJsonObject.Add("grant_type", "password");
+            JObject oJsonObject = new JObject();
+            oJsonObject.Add("userID", userName);
+            oJsonObject.Add("password", password);
+            oJsonObject.Add("grant_type", "password");
 
-                var request = new HttpRequestMessage(
-                HttpMethod.Post, Constants.BaseApiAddress + "/api/login");
+            var request = new HttpRequestMessage(
+            HttpMethod.Post, Constants.BaseApiAddress + ":56700/api/login");
 
-                request.Content = new StringContent(JsonConvert.SerializeObject(oJsonObject), Encoding.UTF8, "application/json");
+            request.Content = new StringContent(JsonConvert.SerializeObject(oJsonObject), Encoding.UTF8, "application/json");
 
 
-                var client = new HttpClient();
-                var response = await client.SendAsync(request);
-                var content = await response.Content.ReadAsStringAsync();
+            var client = new HttpClient();
+            var response = await client.SendAsync(request);
+            var content = await response.Content.ReadAsStringAsync();
 
-                JObject jwtDynamic = JsonConvert.DeserializeObject<JObject>(content);
-                var accessTokenExpiration = jwtDynamic.Value<DateTime>("expiration");
-                var accessToken = jwtDynamic.Value<string>("accessToken");
+            JObject jwtDynamic = JsonConvert.DeserializeObject<JObject>(content);
+            var accessTokenExpiration = jwtDynamic.Value<DateTime>("expiration");
+            var accessToken = jwtDynamic.Value<string>("accessToken");
 
-                Settings.AccessTokenExpirationDate = accessTokenExpiration;
+            Settings.AccessTokenExpirationDate = accessTokenExpiration;
 
             if (!string.IsNullOrEmpty(accessToken))
-            {   
-                    // primeiro Login Na applicação .. autenticaçºao válida
-                    if (string.IsNullOrEmpty(Settings.Username)){ 
-                        Settings.Username = userName;
-                        Settings.Password = password;
-                        App.Current.MainPage = new NavigationPage(new MainPage());
-                    }// Só deve ser executado uma única vez.. ou quando for desinstalada a app
-
-            }else
             {
-            UserDialogs.Instance.Alert("Login Failed...");
+                // primeiro Login Na applicação .. autenticaçºao válida
+                if (string.IsNullOrEmpty(Settings.Username))
+                {
+                    Settings.Username = userName;
+                    Settings.Password = password;
+                    App.Current.MainPage = new NavigationPage(new MainPage());
+                }// Só deve ser executado uma única vez.. ou quando for desinstalada a app
+
+            }
+            else
+            {
+                UserDialogs.Instance.Alert("Login Failed...");
             }
 
-
-
-                //    request.Content = new StringContent(
-                //        JsonConvert.SerializeObject(oJsonObject), Encoding.UTF8, "application/json");
-
-                //    var client = new HttpClient();
-                //    var response = await client.PostAsync(Constants.BaseApiAddress + "/api/login", request).ConfigureAwait(false); ;
-                //    if (response.IsSuccessStatusCode)
-                //    {
-                //        Debug.WriteLine("POST Ok");
-                //        var content = await response.Content.ReadAsStringAsync();
-
-                //        JObject jwtDynamic = JsonConvert.DeserializeObject<JObject>(content);
-
-                //        var accessTokenExpiration = jwtDynamic.Value<DateTime>("expiration");
-                //        accessToken = jwtDynamic.Value<string>("accessToken");
-                //        var msg = jwtDynamic.Value<string>("message");
-                //        Settings.AccessTokenExpirationDate = accessTokenExpiration;
-
-                //            if (string.IsNullOrEmpty(accessToken))
-                //            {
-                //                UserDialogs.Instance.Alert("Login Failed...");
-                //            }
-                //    }
-
-
-                //}
-                //catch (Exception)
-                //{
-
-                //    throw;
-                //}
-
-
-
-
-
-                //if (string.IsNullOrEmpty(accessToken))
-                //{ // falha TOKEN
-
-                //}
-                //else if (string.IsNullOrEmpty(Settings.Password))
-                //{   // Primeiro Login na aplicação, depois da instalação
-
-                //    Settings.Username = userName;
-                //    Settings.Password = password;
-                //    Settings.AccessToken = accessToken;
-                //    App.Current.MainPage = new NavigationPage(new MainPage());
-                //}
-
-
-                return accessToken;
+            return accessToken;
         }
 
 
-        //public async Task<List<Idea>> GetIdeasAsync(string accessToken)
-        //{
-        //    var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-        //        "Bearer", accessToken);
+        public async Task<List<Pin>> GetPinsAsync(string council, string accessToken)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        //    var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/ideas");
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + ":56700/api/Problems/Council/" + council);
+            var pins = JsonConvert.DeserializeObject<List<Pin>>(json);
 
-        //    var ideas = JsonConvert.DeserializeObject<List<Idea>>(json);
+            return pins;
+        }
 
-        //    return ideas;
-        //}
-
-        //public async Task PostIdeaAsync(Idea idea, string accessToken)
-        //{
-        //    var client = new HttpClient();
-        //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-        //    var json = JsonConvert.SerializeObject(idea);
-        //    HttpContent content = new StringContent(json);
-        //    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-        //    var response = await client.PostAsync(Constants.BaseApiAddress + "api/Ideas", content);
-        //}
 
         //public async Task PutIdeaAsync(Idea idea, string accessToken)
         //{
@@ -199,5 +137,23 @@ namespace IPG.Projeto.Mobile.Services
 
         //    return ideas;
         //}
+
+
+        public async Task PostProblemAsync(Problem problem, string accessToken)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var json = JsonConvert.SerializeObject(problem);
+            HttpContent content = new StringContent(json);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var response = await client.PostAsync(Constants.BaseApiAddress + ":56700/api/Problems", content);
+        }
+
+
+
     }
+
+
 }

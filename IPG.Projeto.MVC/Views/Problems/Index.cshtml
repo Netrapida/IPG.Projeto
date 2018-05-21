@@ -1,0 +1,143 @@
+﻿@model IEnumerable<IPG.Projeto.MVC.Models.Problem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Latitude)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Longitude)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Text)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Detail)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Photo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Anonymous)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReportDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastUpdate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.WhenSentDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Flagged)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SendFailCount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SenDFailReason)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SendFailDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Counter)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Public)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Deleted)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Council)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Latitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Longitude)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Detail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Anonymous)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WhenSentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Flagged)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SendFailCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SenDFailReason)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SendFailDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Counter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Public)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Deleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Council.CouncilID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

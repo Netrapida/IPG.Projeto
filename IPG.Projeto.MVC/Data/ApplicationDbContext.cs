@@ -22,5 +22,12 @@ namespace IPG.Projeto.MVC.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        // Adicionar DBset para dbcontext
+        public DbSet<Problem> Problems { get; set; }
+        public DbSet<Comment> Comments { get; set; }    
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<IPG.Projeto.MVC.Models.Council> Council { get; set; }
+
     }
 }

@@ -24,7 +24,7 @@ namespace IPG.Projeto.Mobile.Views
         {
             InitializeComponent();
 
-            var item = new Item
+            var item = new Pin
             {
                 Text = "Item 1",
                 Description = "This is an item description."

@@ -99,6 +99,6 @@ namespace IPG.Projeto.Mobile.Helper
             }
         }
 
-
+        public static object Info { get; internal set; }
     }
 }

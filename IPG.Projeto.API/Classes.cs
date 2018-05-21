@@ -11,6 +11,7 @@ namespace IPG.Projeto.API
         {
             public string UserID { get; set; }
             public string Password { get; set; }
+            public string ApplicationUserID { get; set; }   
         }
 
         public static class Roles

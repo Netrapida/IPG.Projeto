@@ -77,4 +77,8 @@
     <None Include="wwwroot\lib\popper.js\README.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
 </Project>

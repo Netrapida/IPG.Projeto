@@ -43,6 +43,7 @@ namespace IPG.Projeto.API.Controllers
                     {
                         // Verifica se o usuário em questão possui
                         // a role Acesso-APIAlturas
+                        user.ApplicationUserID = userIdentity.Id;
                         credenciaisValidas = userManager.IsInRoleAsync(
                             userIdentity, Roles.ROLE_API).Result;
                         credenciaisValidas = true;
@@ -54,11 +55,17 @@ namespace IPG.Projeto.API.Controllers
             {
                 ClaimsIdentity identity = new ClaimsIdentity(
                     new GenericIdentity(user.UserID, "Login"),
+
                     new[] {
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserID)
+                        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserID),
+                        new Claim(JwtRegisteredClaimNames.Sub, user.ApplicationUserID),
+                        new Claim("ApplicationUserID", user.ApplicationUserID)
+
                     }
+
                 );
+
 
                 DateTime dataCriacao = DateTime.Now;
                 DateTime dataExpiracao = dataCriacao +

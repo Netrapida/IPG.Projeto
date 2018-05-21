@@ -2,110 +2,91 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using IPG.Projeto.Mobile.Controls;
+using IPG.Projeto.Mobile.Helper;
 using IPG.Projeto.Mobile.Models;
 using TK.CustomMap;
+using Xamarin.Forms;
 
 [assembly: Xamarin.Forms.Dependency(typeof(IPG.Projeto.Mobile.Services.MockDataStore))]
 namespace IPG.Projeto.Mobile.Services
 {
-    public class MockDataStore : IDataStore<Item>
+    public class MockDataStore : IDataStore<Pin>
     {
-        List<Item> items;
-        Position _position = new Position(40.7142700, -7.0059700);
-
+        List<Pin> pins;
+        ApiServices _apiServices = new ApiServices();
+        String[] arrayColorString = new String[] { "#f44336", "#03A9F4", "#4CAF50" }; // cores dos states
+        Color[] arrayColorColor = new Color[] { Color.Red, Color.Blue, Color.Green};
         public MockDataStore()
         {
-            items = new List<Item>();
+            pins = new List<Pin>();// pinos observable ...
+        }
 
-            var mockItems = new List<Item>
+      
+        public async Task<bool> AddItemAsync(Pin pin)
+        {
+            pins.Add(pin);
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> UpdateItemAsync(Pin pin)
+        {
+            var _item = pins.Where((Pin arg) => arg.Id == pin.Id).FirstOrDefault();
+            pins.Remove(_item);
+            pins.Add(pin);
+            return await Task.FromResult(true);
+        }
+
+        public async Task<bool> DeleteItemAsync(Pin pin)
+        {
+            var _item = pins.Where((Pin arg) => arg.Id == pin.Id).FirstOrDefault();
+            pins.Remove(_item);
+
+            return await Task.FromResult(true);
+        }
+
+        public async Task<Pin> GetItemAsync(string id)
+        {
+            return await Task.FromResult(pins.FirstOrDefault(s => s.Item_id == id));
+        }
+
+        public async Task<IEnumerable<Pin>> GetItemsAsync(bool forceRefresh = true)
+        {
+            return await Task.FromResult(pins.OrderByDescending(Item => Item.ReportDate)); // order por data nesta versão);
+        }
+
+        public async Task<IEnumerable<Pin>> GetItemsAPIAsync(bool forceRefresh = false)   // Pinos da API
+        {
+            pins.Clear(); // remove todos antes do refesh (talvez melhorar e importar só os que faltam)
+            var me = await Utils.GetCurrentPosition();
+            var info = await Utils.RefreshDataAsync(me);
+            var json = await _apiServices.GetPinsAsync(info.CouncilInfo[0].Id.ToString(), Settings.AccessToken);
+            foreach (var pin in json)
             {
-
-
-                //new Item {Position= randomPosition(),  Item_id = Guid.NewGuid().ToString(), ShowCallout = true, Title = "First item", Text = "First item", Description="This is an item description.", Latitude=40.7699,Longitude=-7.353372,User_Id="Cenas" },
-                //new Item {Position= randomPosition(), Item_id = Guid.NewGuid().ToString(),  ShowCallout = true, Title = "First item",Text = "Second item", Description="This is an item description.", Latitude=40.763019,Longitude=-7.361672,User_Id="Cenas" },
-                //new Item {Position= randomPosition(), Item_id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Third item", Description="This is an item description." , Latitude=40.766019,Longitude=-7.361672,User_Id="Cenas" },
-                //new Item {Position= randomPosition(), Item_id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Fourth item", Description="This is an item description.", Latitude=40.7319,Longitude=-7.341672,User_Id="Cenas",Council_name="União das Freguesia de Vila Nova de Paiva, Alhais e Fráguas" },
-                //new Item {Position= randomPosition(), Item_id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Escadas junto ao Palácio dos Melos, Danificadas e sujas", Description="Um corrimão desapareceu, o chão está escrito com tinta, há mais de 20 degraus partidos, para além de vomitado e lixo. É uma das principais ligações entre o Polo I e a Alta e Baixa. Por ali passam diariamente largas centenas de residentes, estudantes e turistas.", Latitude=40.769019,Longitude=-7.351672,User_Id="Cenas" },
-                //new Item {Position= randomPosition(), Item_id = Guid.NewGuid().ToString(),  ShowCallout = true, Title = "First item",Text = "First item", Description="This is an item description.", Latitude=40.7699,Longitude=-7.353372,User_Id="Cenas" },
-                ////new Item {Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Second item", Description="This is an item description.", Latitude=40.723019,Longitude=-7.363672,User_Id="Cenas",Council="M1" },
-                ////new Item {Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true, Title = "First item", Text = "Third item", Description="This is an item description." , Latitude=40.746019,Longitude=-7.362672,User_Id="Cenas",Council="M1" },
-                //new Item {Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Fourth item", Description="This is an item description.", Latitude=40.7219,Longitude=-7.341672,User_Id="Cenas",Council="M1" },
-                //new Item {Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true,  Title = "First item",Text = "Escadas junto ao Palácio dos Melos, Danificadas e sujas", Description="Um corrimão desapareceu, o chão está escrito com tinta, há mais de 20 degraus partidos, para além de vomitado e lixo. É uma das principais ligações entre o Polo I e a Alta e Baixa. Por ali passam diariamente largas centenas de residentes, estudantes e turistas.", Latitude=40.769019,Longitude=-7.351672,User_Id="Cenas",Council="M1" },
-
-                // new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true, Text = "First item", Description="This is an item description.", Latitude=40.7699,Longitude=-7.353372,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(),ShowCallout = true,  Text = "Second item", Description="This is an item description.", Latitude=40.762019,Longitude=-7.366372,User_Id="Cenas",Council="M1" },
-                //new Item {Position= randomPosition(), _Id  = Guid.NewGuid().ToString(), ShowCallout = true, Text = "Third item", Description="This is an item description." , Latitude=40.746019,Longitude=-7.363672,User_Id="Cenas",Council="M1" },
-                //new Item {Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true, Text = "Fourth item", Description="This is an item description.", Latitude=40.7619,Longitude=-7.34272,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "Escadas junto ao Palácio dos Melos, Danificadas e sujas", Description="Um corrimão desapareceu, o chão está escrito com tinta, há mais de 20 degraus partidos, para além de vomitado e lixo. É uma das principais ligações entre o Polo I e a Alta e Baixa. Por ali passam diariamente largas centenas de residentes, estudantes e turistas.", Latitude=40.769019,Longitude=-7.351672,User_Id="Cenas",Council="M1" },
-
-                //            new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description.", Latitude=40.7699,Longitude=-7.353372,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(),ShowCallout = true,  Text = "Second item", Description="This is an item description.", Latitude=40.763019,Longitude=-7.361672,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(),ShowCallout = true,  Text = "Third item", Description="This is an item description." , Latitude=40.766019,Longitude=-7.361672,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), ShowCallout = true, Text = "Fourth item", Description="This is an item description.", Latitude=40.7319,Longitude=-7.381672,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(),ShowCallout = true,  Text = "Escadas junto ao Palácio dos Melos, Danificadas e sujas", Description="Um corrimão desapareceu, o chão está escrito com tinta, há mais de 20 degraus partidos, para além de vomitado e lixo. É uma das principais ligações entre o Polo I e a Alta e Baixa. Por ali passam diariamente largas centenas de residentes, estudantes e turistas.", Latitude=40.769019,Longitude=-7.351672,User_Id="Cenas",Council="M1" },
-
-                //            new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "First item", Description="This is an item description.", Latitude=40.7699,Longitude=-7.353372,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "Second item", Description="This is an item description.", Latitude=40.663019,Longitude=-7.341672,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "Third item", Description="This is an item description." , Latitude=40.763019,Longitude=-7.351672,User_Id="Cenas",Council="M1" },
-                //new Item { Position= randomPosition(), _Id = Guid.NewGuid().ToString(), Text = "Fourth item", Description="This is an item description.", Latitude=40.7719,Longitude=-7.346672,User_Id="Cenas",Council="M1" },
-                //new Item { _Id = Guid.NewGuid().ToString(), Text = "Escadas junto ao Palácio dos Melos, Danificadas e sujas", Description="Um corrimão desapareceu, o chão está escrito com tinta, há mais de 20 degraus partidos, para além de vomitado e lixo. É uma das principais ligações entre o Polo I e a Alta e Baixa. Por ali passam diariamente largas centenas de residentes, estudantes e turistas.", Latitude=40.769019,Longitude=-7.351672,User_Id="Cenas",Council="M1" },
-
-            };
-
-            foreach (var item in mockItems)
-            {
-                items.Add(item);
+                pin.StatusColor = arrayColorString[pin.State];
+                pin.Position = new Position(pin.Latitude, pin.Longitude);
+                //Melhorar --
+                pin.Title = pin.Text;
+                pin.DefaultPinColor = arrayColorColor[pin.State]; ;
+                pins.Add(pin);
             }
-        }
-
-        public async Task<bool> AddItemAsync(Item item)
-        {
-            items.Add(item);
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> UpdateItemAsync(Item item)
-        {
-            var _item = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(_item);
-            items.Add(item);
-            return await Task.FromResult(true);
-        }
-
-        public async Task<bool> DeleteItemAsync(Item item)
-        {
-            var _item = items.Where((Item arg) => arg.Id == item.Id).FirstOrDefault();
-            items.Remove(_item);
-
-            return await Task.FromResult(true);
-        }
-
-        public async Task<Item> GetItemAsync(string id)
-        {
-            return await Task.FromResult(items.FirstOrDefault(s => s.Item_id == id));
-        }
-
-        public async Task<IEnumerable<Item>> GetItemsAsync(bool forceRefresh = false)
-        {
-            return await Task.FromResult(items.OrderByDescending(Item => Item.Date)); // order por data nesta versão);
+            return pins;
         }
 
 
+        //public Position randomPosition()
+        //{
+        //    Random rng = new Random();
 
-        public Position randomPosition()
-        {
-            Random rng = new Random();
+        //        double lat = rng.NextDouble() * (40.7699 - 40.7500) + 40.7500;
+        //        double lon = rng.NextDouble() * (7.353372 - 7.300000) + 7.30000;
 
-                double lat = rng.NextDouble() * (40.7699 - 40.7500) + 40.7500;
-                double lon = rng.NextDouble() * (7.353372 - 7.300000) + 7.30000;
-         
-            //Latitude=40.7699,Longitude=-7.353372,
+        //    //Latitude=40.7699,Longitude=-7.353372,
 
-            return _position = new Position(lat, lon);
+        //    return _position = new Position(lat, lon);
 
 
-        }
+        //}
 
 
 

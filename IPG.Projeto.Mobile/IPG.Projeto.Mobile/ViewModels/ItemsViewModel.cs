@@ -14,20 +14,20 @@ namespace IPG.Projeto.Mobile.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
-        public ObservableCollection<Item> Items { get; set; }
+        public ObservableCollection<Pin> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
-
+        public bool Search { get; set; } = false;
 
         public ItemsViewModel()
         {
             Title = "Browse";
-            Items = new ObservableCollection<Item>();
+            Items = new ObservableCollection<Pin>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 
-            MessagingCenter.Subscribe<NewItemPage, Item>(this, "AddItem", async (obj, item) =>
+            MessagingCenter.Subscribe<NewItemPage, Pin>(this, "AddItem", async (obj, item) =>
             {
-                var _item = item as Item;
-                Items.Add(_item);
+                var _item = item as Pin;
+                Items.Insert(0,_item); // inserir na primeira posição do listview (.add vai para ultima)
                 await DataStore.AddItemAsync(_item);
             });
         }
@@ -42,13 +42,25 @@ namespace IPG.Projeto.Mobile.ViewModels
             try
             {
                 Items.Clear();
-
-                var items = await DataStore.GetItemsAsync(true);
-
-                foreach (var item in items)
+                if (Search.Equals(true))
                 {
-                    Items.Add(item);
+                    var items = await DataStore.GetItemsAsync(true);
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                    Search = false;
                 }
+                else // receber de JSON --- MELHORAR!!!!
+                {
+                    var items = await DataStore.GetItemsAPIAsync(true);
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                }
+
+
             }
             catch (Exception ex)
             {
