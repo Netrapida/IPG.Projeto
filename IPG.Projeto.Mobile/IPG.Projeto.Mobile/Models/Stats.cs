@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microcharts;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,15 @@ namespace IPG.Projeto.Mobile.Models
         public string Label1 { get; set; }
         public string Value2 { get; set; }
         public string Label2 { get; set; }
+
     }
+
+    public class Stat : Entry
+    {
+        public Stat(float value) : base(value)
+        {
+        }
+    }
+
 }
 

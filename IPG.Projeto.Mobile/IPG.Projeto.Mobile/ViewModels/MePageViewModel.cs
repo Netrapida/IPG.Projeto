@@ -4,184 +4,94 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using Entry = Microcharts.Entry;
 using Xamarin.Forms;
+using IPG.Projeto.Mobile.Services;
+using IPG.Projeto.Mobile.Helper;
+using System.Threading.Tasks;
+using IPG.Projeto.Mobile.Views;
+using System.Diagnostics;
 
 namespace IPG.Projeto.Mobile.ViewModels
 {
 	public class MePageViewModel : BaseViewModel
 	{
+        public Command LoadStatsCommand { get; set; }    
         public ObservableCollection<Stats> Statistics { get; set; }
-        List<MyChart> MyCharts;
-
-        public class MyChart
-        {
-            public Chart ChartData { get; set; }
-        }
-
-        public Chart Chart1 => new LineChart()
-        {
-            Entries = entries2
-        };
-        public Chart Chart2 => new LineChart()
-        {
-            Entries = entries
-        };
-
-        List<Entry> entries = new List<Entry>
-        {
-            new Entry(200)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label ="J",
-            },
-            new Entry(400)            {
-
-                Color = SKColor.Parse("00BFFF"),
-                Label = "F",
-
-              },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "M",
-             },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label ="Abr",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "Mai",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "Jun",
-            },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label ="Jul",
-            },
-            new Entry(400)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "Ago",
-            },
-            new Entry(600)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "set",
-            },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label ="Out",
-            },
-            new Entry(400)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "Nov",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("00BFFF"),
-                Label = "Dez",
-            },
-            };
-
-        List<Entry> entries2 = new List<Entry>
-        {
-            new Entry(0)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label ="J",
-            },
-            new Entry(0)            {
-
-                Color = SKColor.Parse("#77d065"),
-                Label = "F",
-
-              },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "M",
-             },
-             new Entry(0)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label ="A",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "M",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "J",
-            },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label ="J",
-            },
-            new Entry(0)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "A",
-            },
-            new Entry(600)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "S",
-            },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label ="O",
-            },
-            new Entry(400)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "N",
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#77d065"),
-                Label = "D",
-            },
-            };
-
-
-
-
-
         public MePageViewModel ()
 		{
-
-            Statistics = new ObservableCollection<Stats>();
-
-            Statistics.Add(new Stats { Title = "Relatórios enviados", Label1 = "August", Label2 = "July", Value1 = "4,2", Value2 = "24,4" });
-            Statistics.Add(new Stats { Title = "Corrigidos", Label1 = "August", Label2 = "July", Value1 = "4:34", Value2 = "5:02" });
-            //Statistics.Add(new Stats { Title = "Activities", Label1 = "August", Label2 = "July", Value1 = "1", Value2 = "6" });
-            //Statistics.Add(new Stats { Title = "Calories Burned", Label1 = "August", Label2 = "July", Value1 = "341", Value2 = "1.954" });
-            //Statistics.Add(new Stats { Title = "Elevation Climb (M)", Label1 = "August", Label2 = "July", Value1 = "29,3", Value2 = "221,1" });
-            //Statistics.Add(new Stats { Title = "Time Spent", Label1 = "August", Label2 = "July", Value1 = "19:22", Value2 = "2:02:39" });
+            Title = "Me";
+            LoadStatsCommand = new Command(async () => await ExecuteLoadStatsCommand());   
+            MessagingCenter.Subscribe<NewItemPage, Pin>(this, "AddItem", async (obj, item) =>
+            {
 
 
+            });
+
+            Charts = new ObservableCollection<Chart>();
+            Statistics = new ObservableCollection<Stats>
+            {
+                new Stats { Title = "Relatórios enviados", Label1 = "August", Label2 = "July", Value1 = "4,2", Value2 = "24,4" },
+                new Stats { Title = "Corrigidos", Label1 = "August", Label2 = "July", Value1 = "4:34", Value2 = "5:02" }
+            };
 
 
         }
-      
+
+
+        async Task ExecuteLoadStatsCommand()    
+        {
+            if (IsBusy)
+                return;
+
+            IsBusy = true;
+
+            try
+            {
+                //Charts.Clear();
+                //var charts = await _apiServices.ChartUserAsync();
+                //foreach (var chart in charts)
+                //{
+                //    Charts.Add(chart); // update dos chart REVER não funciona
+                //}
+
+                // quando adicionar um pino .. atualizar as metricas aqui
+
+            }
+
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+
+
+
+        //public async Task<Chart> ChartReportedAsync()
+        //{
+        //    var entries = await _apiServices.GetStastReportedAsync(Settings.AccessToken);
+        //    entries.Reverse();
+
+        //    Chart Chart = new LineChart()
+        //    {
+        //        LabelTextSize = 30,
+        //        Entries = entries
+
+        //    };
+        //    return Chart;
+        //}
+ 
+
 
 
     }
 }
+
+
+
+

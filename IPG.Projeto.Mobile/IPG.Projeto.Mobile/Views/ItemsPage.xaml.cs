@@ -50,7 +50,7 @@ namespace IPG.Projeto.Mobile.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (viewModel.Items.Count == 0)
+            if (viewModel.Items.Count == 0) { }
                 viewModel.LoadItemsCommand.Execute(null);
                  // fazer sempre refrwsh para poder ordenar ao adicionar 
                 

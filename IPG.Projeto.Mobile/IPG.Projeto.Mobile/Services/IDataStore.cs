@@ -11,6 +11,6 @@ namespace IPG.Projeto.Mobile.Services
         Task<bool> DeleteItemAsync(T item);
         Task<T> GetItemAsync(string id);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = true);
-        Task<IEnumerable<T>> GetItemsAPIAsync(bool forceRefresh = true);    
+        Task<IEnumerable<T>> GetPinsAPIAsync(bool forceRefresh = true);    
     }
 }

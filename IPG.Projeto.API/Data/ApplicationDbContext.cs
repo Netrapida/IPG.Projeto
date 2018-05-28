@@ -21,5 +21,9 @@ namespace IPG.Projeto.API.Data
         }
 
         public DbSet<Problem> Problems { get; set; }
+
+        public DbSet<IPG.Projeto.API.Models.Council> Council { get; set; }
+
+        public DbSet<IPG.Projeto.API.Models.ApplicationUser> ApplicationUser { get; set; }
     }
 }

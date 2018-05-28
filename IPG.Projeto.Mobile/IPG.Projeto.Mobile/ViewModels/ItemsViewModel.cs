@@ -2,13 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
-
 using IPG.Projeto.Mobile.Models;
 using IPG.Projeto.Mobile.Views;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace IPG.Projeto.Mobile.ViewModels
 {
@@ -17,6 +14,8 @@ namespace IPG.Projeto.Mobile.ViewModels
         public ObservableCollection<Pin> Items { get; set; }
         public Command LoadItemsCommand { get; set; }
         public bool Search { get; set; } = false;
+        //PinsViewModel viewModel; // para o refresh (observable não funciona de jeito)
+
 
         public ItemsViewModel()
         {
@@ -36,9 +35,7 @@ namespace IPG.Projeto.Mobile.ViewModels
         {
             if (IsBusy)
                 return;
-
             IsBusy = true;
-
             try
             {
                 Items.Clear();
@@ -53,13 +50,12 @@ namespace IPG.Projeto.Mobile.ViewModels
                 }
                 else // receber de JSON --- MELHORAR!!!!
                 {
-                    var items = await DataStore.GetItemsAPIAsync(true);
+                    var items = await DataStore.GetPinsAPIAsync(true);
                     foreach (var item in items)
                     {
                         Items.Add(item);
                     }
                 }
-
 
             }
             catch (Exception ex)
@@ -71,5 +67,7 @@ namespace IPG.Projeto.Mobile.ViewModels
                 IsBusy = false;
             }
         }
+
+
     }
 }

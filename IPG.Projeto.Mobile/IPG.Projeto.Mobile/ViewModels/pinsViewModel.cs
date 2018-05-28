@@ -13,8 +13,9 @@ using Acr.UserDialogs;
 using Entry = Microcharts.Entry;
 using SkiaSharp;
 using Microcharts;
-using IPG.Projeto.Mobile.Helper;
 using IPG.Projeto.Mobile.Services;
+using IPG.Projeto.Mobile.Helper;
+using System.Linq;
 
 namespace IPG.Projeto.Mobile.ViewModels
 {
@@ -26,115 +27,23 @@ namespace IPG.Projeto.Mobile.ViewModels
         public Command LoadMeCommand { get; set; }
         public ObservableCollection<Stats> Statistics { get; set; } // testes
 
-
         public PinsViewModel()
         {
             Items = new ObservableCollection<Pin>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+
             MessagingCenter.Subscribe<NewItemPage, Pin>(this, "AddItem", (obj, item) =>
             {
                 var _item = item as Pin;
                 Items.Add(_item); // refresh pinos sem adicionar novo na lista evitar duplicação
             });
-           
+
             LoadMeCommand = new Command(async () => await ExecuteLoadMeCommand()); //me 
 
-            // teste teste teste 
-            Statistics = new ObservableCollection<Stats>();
 
-            Statistics.Add(new Stats { Title = "Relatórios", Label1 = "Enviados", Label2 = "Corrigidos", Value1 = "5", Value2 = "1" });
-            Statistics.Add(new Stats { Title = "Corrigidos", Label1 = "August", Label2 = "July", Value1 = "4:34", Value2 = "5:02" });
-            Statistics.Add(new Stats { Title = "Activities", Label1 = "August", Label2 = "July", Value1 = "1", Value2 = "6" });
-            //Statistics.Add(new Stats { Title = "Calories Burned", Label1 = "August", Label2 = "July", Value1 = "341", Value2 = "1.954" });
-            //Statistics.Add(new Stats { Title = "Elevation Climb (M)", Label1 = "August", Label2 = "July", Value1 = "29,3", Value2 = "221,1" });
-            //Statistics.Add(new Stats { Title = "Time Spent", Label1 = "August", Label2 = "July", Value1 = "19:22", Value2 = "2:02:39" });
+        }
 
-    }
-
-        public Chart Chart1 => new LineChart()
-        {
-            Entries = entries
-        };
-
-        public Chart Chart2 => new LineChart()
-        {
-            Entries = entries2
-        };
-
-        List<Entry> entries = new List<Entry>
-        {
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#90D585"),
-
-
-            },
-            new Entry(000)
-            {
-
-                Color = SKColor.Parse("#90D585"),
-
-
-              },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#90D585"),
-   
-             },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("#90D585"),
-  
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#90D585"),
-
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#90D585"),
-
-            },
-            };
-
-
-        List<Entry> entries2 = new List<Entry>
-        {
-                   new Entry(000)
-            {
-                Color = SKColor.Parse("#FF1943"),
-
-            },
-            new Entry(000)            {
-
-                Color = SKColor.Parse("#FF1943"),
-
-
-              },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#FF1943"),
-
-             },
-             new Entry(200)
-            {
-                Color = SKColor.Parse("#FF1943"),
-
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#FF1943"),
-
-            },
-            new Entry(000)
-            {
-                Color = SKColor.Parse("#FF1943"),
-
-            },
-          };
-
-
+        private readonly ApiServices _apiServices = new ApiServices();
         async Task ExecuteLoadItemsCommand()
         {
             if (IsBusy)
@@ -160,7 +69,7 @@ namespace IPG.Projeto.Mobile.ViewModels
                 IsBusy = false;
             }
         }
-        async Task ExecuteLoadMeCommand()   
+        async Task ExecuteLoadMeCommand()
         {
             if (IsBusy)
                 return;
@@ -179,9 +88,14 @@ namespace IPG.Projeto.Mobile.ViewModels
                     var info = await Utils.RefreshDataAsync(me);
                     MyPositionCouncil_1 = info.CouncilInfo[1].Name;
                     MyPositionCouncil_0 = info.CouncilInfo[0].Name;
-                    
+
+                    List<Chart> Charts = await _apiServices.ChartCouncilAsync(info.CouncilInfo[0].Id);
+                    ChartReported = Charts[0];
+                    ChartFix = Charts[1];
+
+
                 }
-   
+
             }
 
             catch (Exception ex)
@@ -192,27 +106,14 @@ namespace IPG.Projeto.Mobile.ViewModels
             {
                 IsBusy = false;
             }
+
+
         }
-
-        //private async Task<bool> GetMyItems(RootCouncil info)
-        //{
-        //    var json = await _apiServices.GetPinsAsync(info.CouncilInfo[0].Id.ToString(), Settings.AccessToken);
-        //    foreach (var pin in json)
-        //    {
-        //        pin.Position = new Position(pin.Latitude, pin.Longitude);
-        //        pins.Add(pin);
-        //    }
-        //    return await Task.FromResult(true);
-        //}
-
-      
-        // layout binding------------------------------------------------------------
-
 
 
         // maps council cenas !!!!!!!!!!!!!!!!!!!!!!! REVER COLOCAR numa  LIST<string>
         string myPositionCouncil_0 = string.Empty;
-       
+
         public string MyPositionCouncil_0
         {
             get { return myPositionCouncil_0; }
@@ -224,7 +125,21 @@ namespace IPG.Projeto.Mobile.ViewModels
             get { return myPositionCouncil_1; }
             set { SetProperty(ref myPositionCouncil_1, value); }
         }
+
         //-----------------------------  REVER ------------------------------------------
+        Chart chartReported = new LineChart(){ Entries = new[] { new Entry(0) }, };
+        public Chart ChartReported
+            {
+            get { return chartReported; }
+            set { SetProperty(ref chartReported, value); }
+        }
+        Chart chartFix = new LineChart() { Entries = new[] { new Entry(0) }, };
+        public Chart ChartFix
+        {
+            get { return chartFix; }
+            set { SetProperty(ref chartFix, value); }
+        }
+       
 
 
     }

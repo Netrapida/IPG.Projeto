@@ -49,7 +49,7 @@ namespace IPG.Projeto.Mobile.Views
                     Name = info.CouncilInfo[0].Name
                 };
 
-                Pin = new Pin // para colocar logon o Pin
+                Pin = new Pin // para colocar logo o Pin
                 {
                     Position = new TK.CustomMap.Position(me.Latitude, me.Longitude),
                     Council_name = Council.Name,
@@ -63,7 +63,8 @@ namespace IPG.Projeto.Mobile.Views
                     Longitude = me.Longitude,
                     Text = "Colocar Título de Problema",
                     Detail = "Uma Descrição Detalhada do Problema",
-                    ReportDate = DateTime.Now,
+                    //ReportDate = DateTime.Now,
+                    //LastUpdate = DateTime.Now,
 
                 };
                 BindingContext = this;
@@ -82,16 +83,12 @@ namespace IPG.Projeto.Mobile.Views
             Problem.Text = Problem.Text;
             Problem.Detail = Problem.Detail;
 
-
             MessagingCenter.Send(this, "AddItem", Pin);
-
             using (UserDialogs.Instance.Loading("Enviar problema..."))
             {
                 await _apiServices.PostProblemAsync(Problem, Settings.AccessToken);
-                Task.Delay(3000).Wait(); // simular tempo de envio da foto
             }
-            
-            UserDialogs.Instance.Alert("O seu problema foi enviado com sucesso, será encaminhado para :"+ Council.Name);
+            UserDialogs.Instance.Toast("O seu problema foi enviado com sucesso, será encaminhado para :"+ Council.Name);
             await Navigation.PopModalAsync();
         }
 

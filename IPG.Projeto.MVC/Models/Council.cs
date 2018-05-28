@@ -7,7 +7,7 @@ namespace IPG.Projeto.MVC.Models
     {
         [Key]
         public int CouncilID { get; set; }         
-        public int Id { get; set; }
+        public int Id { get; set; }  // remover
         public string Name { get; set; }
         public int Reported { get; set; }
         public int ReportedFix { get; set; }

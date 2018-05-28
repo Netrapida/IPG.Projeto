@@ -13,12 +13,15 @@ using IPG.Projeto.Mobile.ViewModels;
 using IPG.Projeto.Mobile.Views;
 using Xamarin.Forms;
 using Acr.UserDialogs;
+using Entry = Microcharts.Entry;
+using SkiaSharp;
+using Microcharts;
 
 namespace IPG.Projeto.Mobile.Services
 {
     internal class ApiServices
     {
-
+        // Login | Registo -------------  REVER 
         public async Task<bool> RegisterUserAsync(string email, string password, string confirmPassword)
         {
             var client = new HttpClient();
@@ -33,7 +36,6 @@ namespace IPG.Projeto.Mobile.Services
             var json = JsonConvert.SerializeObject(model);
 
             HttpContent httpContent = new StringContent(json);
-
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var response = await client.PostAsync(
@@ -49,15 +51,18 @@ namespace IPG.Projeto.Mobile.Services
 
         public async Task<string> LoginAsync(string userName, string password)
         {
-            JObject oJsonObject = new JObject();
-            oJsonObject.Add("userID", userName);
-            oJsonObject.Add("password", password);
-            oJsonObject.Add("grant_type", "password");
+            JObject oJsonObject = new JObject
+            {
+                { "userID", userName },
+                { "password", password },
+                { "grant_type", "password" }
+            };
 
             var request = new HttpRequestMessage(
-            HttpMethod.Post, Constants.BaseApiAddress + ":56700/api/login");
-
-            request.Content = new StringContent(JsonConvert.SerializeObject(oJsonObject), Encoding.UTF8, "application/json");
+            HttpMethod.Post, Constants.BaseApiAddress + "/api/login")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(oJsonObject), Encoding.UTF8, "application/json")
+            };
 
 
             var client = new HttpClient();
@@ -87,18 +92,6 @@ namespace IPG.Projeto.Mobile.Services
             }
 
             return accessToken;
-        }
-
-
-        public async Task<List<Pin>> GetPinsAsync(string council, string accessToken)
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-            var json = await client.GetStringAsync(Constants.BaseApiAddress + ":56700/api/Problems/Council/" + council);
-            var pins = JsonConvert.DeserializeObject<List<Pin>>(json);
-
-            return pins;
         }
 
 
@@ -138,6 +131,7 @@ namespace IPG.Projeto.Mobile.Services
         //    return ideas;
         //}
 
+        //Postar um problems
 
         public async Task PostProblemAsync(Problem problem, string accessToken)
         {
@@ -148,9 +142,111 @@ namespace IPG.Projeto.Mobile.Services
             HttpContent content = new StringContent(json);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await client.PostAsync(Constants.BaseApiAddress + ":56700/api/Problems", content);
+            var response = await client.PostAsync(Constants.BaseApiAddress + "/api/Problems", content);
+        }
+       
+
+        //  stats -----------------------------------------------------------------------------------
+        // receber stasts individuais .. quantos envios e quantos fix (ultimos 6 meses, send+fix)
+        public async Task<List<List<Entry>>> GetStatsUserAsync(string accessToken)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "/api/Problems/stats/user/" + Settings.Username);
+            var entries = JsonConvert.DeserializeObject<List<List<Entry>>>(json);
+
+            foreach (var entrie in entries[0]) { entrie.Color = SKColor.Parse("f44336"); } // color para a template  ENVIADOS                
+            foreach (var entrie in entries[1]) { entrie.Color = SKColor.Parse("90D585"); }// color para a template FIXED
+            entries[0].Reverse();
+            entries[1].Reverse();
+            return entries;  
         }
 
+
+        // receber stasts council .. quantos envios e quantos fix
+        public async Task<List<List<Entry>>> GetStatsCouncilAsync(int council, string accessToken)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "/api/Problems/stats/council/" + council);
+            var entries = JsonConvert.DeserializeObject<List<List<Entry>>>(json);
+
+            foreach (var entrie in entries[0]) { entrie.Color = SKColor.Parse("f44336"); } // color para a template  ENVIADOS                
+            foreach (var entrie in entries[1]) { entrie.Color = SKColor.Parse("90D585"); }// color para a template FIXED
+            entries[0].Reverse();
+            entries[1].Reverse();
+            return entries;
+        }
+
+
+        public async Task<List<Chart>> ChartUserAsync()
+        {
+            List<Chart> Charts = new List<Chart>();
+
+            var entries = await GetStatsUserAsync(Settings.AccessToken);
+
+            Chart ChartReported = new LineChart()
+            {
+                LabelTextSize = 30,
+                Entries = entries[0],
+                MinValue = 0
+
+            };
+            Chart ChartFixed = new LineChart()
+            {
+                LabelTextSize = 30,
+                Entries = entries[1],
+                MinValue = 0
+
+            };
+
+
+            var max = ChartReported.MaxValue;
+            if (ChartFixed.MaxValue > max) max = ChartFixed.MaxValue;
+            ChartFixed.MaxValue = max;
+            ChartReported.MaxValue = max;
+
+            Charts.Add(ChartReported);
+            Charts.Add(ChartFixed);
+
+            return Charts;
+        }
+
+
+        public async Task<List<Chart>> ChartCouncilAsync(int council)  
+        {
+            List<Chart> Charts = new List<Chart>();
+
+            var entries = await GetStatsCouncilAsync(council, Settings.AccessToken);
+
+            Chart ChartReported = new LineChart()
+            {
+                LabelTextSize = 30,
+                Entries = entries[0],
+                MinValue = 0
+
+            };
+            Chart ChartFixed = new LineChart()
+            {
+                LabelTextSize = 30,
+                Entries = entries[1],
+                MinValue = 0
+
+            };
+
+
+            var max = ChartReported.MaxValue;
+            if (ChartFixed.MaxValue > max) max = ChartFixed.MaxValue;
+            ChartFixed.MaxValue = max;
+            ChartReported.MaxValue = max;
+
+            Charts.Add(ChartReported);
+            Charts.Add(ChartFixed);
+
+            return Charts;
+        }
 
 
     }

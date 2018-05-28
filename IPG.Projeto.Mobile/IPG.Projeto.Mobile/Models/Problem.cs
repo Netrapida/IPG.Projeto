@@ -17,14 +17,18 @@ namespace IPG.Projeto.Mobile.Models
         public string Detail { get; set; }
         public string Photo { get; set; }
         public DateTime ReportDate { get; set; }
+        public DateTime LastUpdate { get; set; }
 
         //Quem envia
         public bool Anonymous { get; set; }
-        public string ApplicationUserID { get; set; }
+        //public string ApplicationUserID { get; set; }
+        public ApplicationUser User { get; set; }
+
 
         public Problem()// construtor default
         {
             ReportDate = DateTime.Now;
+            LastUpdate = DateTime.Now;
             Anonymous = false;
         }
 

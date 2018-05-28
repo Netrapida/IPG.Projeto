@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using IPG.Projeto.Mobile.Controls;
 using IPG.Projeto.Mobile.Helper;
 using IPG.Projeto.Mobile.Models;
+using Newtonsoft.Json;
 using TK.CustomMap;
-using Xamarin.Forms;
+
+
 
 [assembly: Xamarin.Forms.Dependency(typeof(IPG.Projeto.Mobile.Services.MockDataStore))]
 namespace IPG.Projeto.Mobile.Services
@@ -14,15 +17,7 @@ namespace IPG.Projeto.Mobile.Services
     public class MockDataStore : IDataStore<Pin>
     {
         List<Pin> pins;
-        ApiServices _apiServices = new ApiServices();
-        String[] arrayColorString = new String[] { "#f44336", "#03A9F4", "#4CAF50" }; // cores dos states
-        Color[] arrayColorColor = new Color[] { Color.Red, Color.Blue, Color.Green};
-        public MockDataStore()
-        {
-            pins = new List<Pin>();// pinos observable ...
-        }
 
-      
         public async Task<bool> AddItemAsync(Pin pin)
         {
             pins.Add(pin);
@@ -41,7 +36,6 @@ namespace IPG.Projeto.Mobile.Services
         {
             var _item = pins.Where((Pin arg) => arg.Id == pin.Id).FirstOrDefault();
             pins.Remove(_item);
-
             return await Task.FromResult(true);
         }
 
@@ -52,41 +46,41 @@ namespace IPG.Projeto.Mobile.Services
 
         public async Task<IEnumerable<Pin>> GetItemsAsync(bool forceRefresh = true)
         {
-            return await Task.FromResult(pins.OrderByDescending(Item => Item.ReportDate)); // order por data nesta versão);
+            return await Task.FromResult(pins.OrderByDescending(Item => Item.LastUpdate)); // order por LastUpdate nesta versão);
         }
 
-        public async Task<IEnumerable<Pin>> GetItemsAPIAsync(bool forceRefresh = false)   // Pinos da API
+
+        public async Task<List<Pin>> GetPinsAsync(string council, string accessToken)
         {
-            pins.Clear(); // remove todos antes do refesh (talvez melhorar e importar só os que faltam)
-            var me = await Utils.GetCurrentPosition();
-            var info = await Utils.RefreshDataAsync(me);
-            var json = await _apiServices.GetPinsAsync(info.CouncilInfo[0].Id.ToString(), Settings.AccessToken);
-            foreach (var pin in json)
-            {
-                pin.StatusColor = arrayColorString[pin.State];
-                pin.Position = new Position(pin.Latitude, pin.Longitude);
-                //Melhorar --
-                pin.Title = pin.Text;
-                pin.DefaultPinColor = arrayColorColor[pin.State]; ;
-                pins.Add(pin);
-            }
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "/api/Problems/Council/" + council);
+            var pins = JsonConvert.DeserializeObject<List<Pin>>(json);
+
             return pins;
         }
 
 
-        //public Position randomPosition()
-        //{
-        //    Random rng = new Random();
+        public async Task<IEnumerable<Pin>> GetPinsAPIAsync(bool forceRefresh = false)   // Pinos da API
+        {
+            pins = new List<Pin>();// pinos observable ...
+            var me = await Utils.GetCurrentPosition();
+            var info = await Utils.RefreshDataAsync(me);
+            var json = await GetPinsAsync(info.CouncilInfo[0].Id.ToString(), Settings.AccessToken);
+            foreach (var pin in json)
+            {
+                pin.StatusColor = Constants.arrayColorString[pin.State];
+                pin.Position = new Position(pin.Latitude, pin.Longitude);
+                //Melhorar --
+                pin.Title = pin.Text;
+                pin.Subtitle = pin.LastUpdate.ToString();
+                pin.DefaultPinColor = Constants.arrayColorColor[pin.State];
+                pins.Add(pin);
+            }
 
-        //        double lat = rng.NextDouble() * (40.7699 - 40.7500) + 40.7500;
-        //        double lon = rng.NextDouble() * (7.353372 - 7.300000) + 7.30000;
-
-        //    //Latitude=40.7699,Longitude=-7.353372,
-
-        //    return _position = new Position(lat, lon);
-
-
-        //}
+            return pins;
+        }
 
 
 

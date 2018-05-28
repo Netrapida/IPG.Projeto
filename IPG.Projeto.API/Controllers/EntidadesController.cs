@@ -14,19 +14,15 @@ namespace IPG.Projeto.API.Controllers
     [Route("api/Entidades")]
     public class EntidadesController : Controller
     {
-        // GET: api/Entidades
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
+       
         // GET: api/Entidades/-7.356032,40.779701
         [HttpGet("{Long},{Lat}")]
         public async Task<RootCouncil> GetAsync(string Long, string Lat)
         {
-            var result = new RootCouncil();
-            result.CouncilInfo = new List<Council>();
+            var result = new RootCouncil
+            {
+                CouncilInfo = new List<Council>()
+            };
             var uri = new Uri("http://mapas.distrito.pt/point/4326/" + Long + "," + Lat + "?type=O07,O08");
             HttpClient myClient = new HttpClient();
 
@@ -50,22 +46,7 @@ namespace IPG.Projeto.API.Controllers
             return result;
         }
 
-        // POST: api/Entidades
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
-        
-        // PUT: api/Entidades/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-        
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+      
+    
     }
 }

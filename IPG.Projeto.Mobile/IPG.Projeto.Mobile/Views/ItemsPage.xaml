@@ -9,7 +9,7 @@
 
     <ContentPage.Content>
 
-        <StackLayout Orientation="Vertical">
+        <StackLayout  Orientation="Vertical">
             <SearchBar Placeholder="Procurar" BackgroundColor="{StaticResource Primary}" TextColor="White" TextChanged="SearchBar_TextChanged"></SearchBar>
 
             
@@ -33,18 +33,18 @@
 
                             <StackLayout Padding="10" Orientation="Horizontal">
                                 <BoxView BackgroundColor="{Binding StatusColor}" WidthRequest="5" Margin="0,0,0,0" />
-                                <Grid VerticalOptions="FillAndExpand"
-             Padding="0"
-             HorizontalOptions="FillAndExpand"
-             BackgroundColor="Transparent">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                                <Grid VerticalOptions="FillAndExpand"  
+                                      Padding="0"
+                                      HorizontalOptions="FillAndExpand"
+                                      BackgroundColor="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
                                     
                                     <StackLayout Orientation="Vertical">
-                                        <Label Text="{Binding Text}" TextColor="#212121" FontSize="17" LineBreakMode="NoWrap"/>
+                                        <Label Text="{Binding Text}" TextColor="#212121" FontSize="17" />
   
                                         <StackLayout Orientation="Horizontal">
                                            

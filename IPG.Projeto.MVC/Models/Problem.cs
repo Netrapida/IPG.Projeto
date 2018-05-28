@@ -23,7 +23,7 @@ namespace IPG.Projeto.MVC.Models
         public bool Anonymous { get; set; }
         [Required]
         public DateTime ReportDate { get; set; }
-        public DateTime? LastUpdate { get; set; }
+        public DateTime? LastUpdate { get; set; } // alterar para mandatario
         public DateTime? WhenSentDate { get; set; }
         public bool Flagged { get; set; }
         public int SendFailCount { get; set; }

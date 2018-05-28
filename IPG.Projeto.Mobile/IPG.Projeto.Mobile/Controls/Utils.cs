@@ -118,12 +118,14 @@ namespace IPG.Projeto.Mobile.Controls
         // receber mais info sobre local ond estou
         public static async Task<RootCouncil> RefreshDataAsync(Position me)// receber mais info sobre local ond estou
         {
-            var result = new RootCouncil();
-            result.CouncilInfo = new List<Council>();
+            var result = new RootCouncil
+            {
+                CouncilInfo = new List<Council>()
+            };
             var _latitude = string.Format("{0:f6}", me.Latitude).Replace(",", ".");
             var _longitude = string.Format("{0:f6}", me.Longitude).Replace(",", ".");
 
-            var uri = new Uri(Constants.BaseApiAddress + ":56700/api/Entidades/" + _longitude + "," + _latitude);
+            var uri = new Uri(Constants.BaseApiAddress + "/api/Entidades/" + _longitude + "," + _latitude);
             HttpClient myClient = new HttpClient();
 
             var response = await myClient.GetAsync(uri);

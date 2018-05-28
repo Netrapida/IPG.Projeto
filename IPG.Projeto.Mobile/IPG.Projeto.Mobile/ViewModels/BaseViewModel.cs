@@ -8,14 +8,20 @@ using Xamarin.Forms;
 using IPG.Projeto.Mobile.Models;
 using IPG.Projeto.Mobile.Services;
 using TK.CustomMap;
+using System.Collections.ObjectModel;
+using Microcharts;
 
 namespace IPG.Projeto.Mobile.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
         public IDataStore<Pin> DataStore => DependencyService.Get<IDataStore<Pin>>() ?? new MockDataStore();
+        public ObservableCollection<Chart> Charts { get; set; }
 
-        MapSpan _mapRegion = MapSpan.FromCenterAndRadius(new Position(40.7142700, -74.0059700), Distance.FromKilometers(2));
+        // startup da posição do mapa
+        MapSpan _mapRegion = MapSpan.FromCenterAndRadius(new Position(40.77196501, -7.35307698), Distance.FromKilometers(200));
+
+
 
         bool isBusy = false;
         public bool IsBusy
@@ -46,7 +52,10 @@ namespace IPG.Projeto.Mobile.ViewModels
                     OnPropertyChanged("MapRegion");
                 }
             }
-        }
+        }   
+
+
+
 
 
 

@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IPG.Projeto.API.Data;
 using IPG.Projeto.API.Models;
+using IPG.Projeto.API.Models.Stats;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Globalization;
 
 namespace IPG.Projeto.API.Controllers
 {
@@ -16,6 +18,7 @@ namespace IPG.Projeto.API.Controllers
     [Route("api/Problems")]
     public class ProblemsController : Controller
     {
+ 
         private readonly ApplicationDbContext _context;
 
         public ProblemsController(ApplicationDbContext context)
@@ -49,21 +52,126 @@ namespace IPG.Projeto.API.Controllers
             return Ok(problem);
         }
 
-        // GET: api/Problems/5
 
-        [HttpGet("Council/{id}")]
-        public async Task<IActionResult> GetProblem_byCoucil([FromRoute] string id)    
+        //// GET: api/Problems/stats/council/5
+        [HttpGet("stats/council/{id}")]
+        //[Authorize("Bearer")]
+        public async Task<IActionResult> GetStatsCouncilProblem([FromRoute] int id) 
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // REVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!..>:>:>::>::>:>:>:>:>:
+            var statsReported = new List<Stat>();
+            for (int i = 0; i <= 5; i++)
+            { // REVER REVER REVER
+                Stat Stat = new Stat();
+                var Month = DateTime.Now.AddMonths(-i).Month;
+                Stat.Value = await _context.Problems.Where(e => e.CouncilID == id && Month == e.ReportDate.Month).CountAsync();
+                //Stat.ValueLabel = Stat.Value.ToString();
+                //Stat.Label = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(Month);
+
+                statsReported.Add(Stat);
+            }
+            var statsFixed = new List<Stat>();
+            for (int i = 0; i <= 5; i++)
+            { // REVER REVER REVER
+                Stat Stat = new Stat();
+                var Month = DateTime.Now.AddMonths(-i).Month;
+                Stat.Value = await _context.Problems.Where(e => e.CouncilID == id && Month == e.LastUpdate.Month && e.State == 3).CountAsync();
+                //Stat.ValueLabel = Stat.Value.ToString();
+                Stat.Label = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(Month);
+
+                statsFixed.Add(Stat);
+            }
+            var Stats = new List<List<Stat>>
+            {
+                statsReported,
+                statsFixed
+            };
+
+
+
+            if (Stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Stats);
+        }
+
+
+
+
+        //// GET: api/Problems/stats/user/daniel@site.com
+        [HttpGet("stats/user/{id}")]
+        //[Authorize("Bearer")]
+        public async Task<IActionResult> GetStatsUserProblem([FromRoute] string id)    
+        {
+            
+            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            // REVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!..>:>:>::>::>:>:>:>:>:
+            var statsReported = new List<Stat>();       
+            for (int i = 0; i <=5; i++)
+            { // REVER REVER REVER
+                Stat Stat = new Stat();
+                var Month = DateTime.Now.AddMonths(-i).Month;
+                Stat.Value = await _context.Problems.Where(e => e.User.UserName == id && Month == e.ReportDate.Month).CountAsync();
+                //Stat.ValueLabel = Stat.Value.ToString();
+                Stat.Label = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(Month);
+
+                statsReported.Add(Stat);
+            }
+            var statsFixed = new List<Stat>();  
+            for (int i = 0; i <= 5; i++)
+            { // REVER REVER REVER
+                Stat Stat = new Stat();
+                var Month = DateTime.Now.AddMonths(-i).Month;
+                Stat.Value = await _context.Problems.Where(e => e.User.UserName == id && Month == e.LastUpdate.Month && e.State == 3).CountAsync();
+                //Stat.ValueLabel = Stat.Value.ToString();
+                Stat.Label = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(Month);
+
+                statsFixed.Add(Stat);
+            }
+            var Stats = new List<List<Stat>>
+            {
+                statsReported,
+                statsFixed
+            };
+
+
+
+            if (Stats == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Stats);
+        }
+
+
+        // GET: api/Problems/Councils/5
+        [HttpGet("Council/{ids}")]
+        public async Task<IActionResult> GetProblem_byCoucil([FromRoute] string ids)    
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var ids = id.Split(',').Select(i => Int32.Parse(i)).ToArray(); // separar os council do array
-            int cenas = ids[0];
+            var Ids = ids.Split(',').Select(i => Int32.Parse(i)).ToArray(); // separar os council do array  
+            var query = _context.Problems.Include("Council").Include("User").Where(p => p.Public == true &&
+                                                                                        p.Flagged == false &&
+                                                                                        p.Deleted == false)
+                                                                                        .AsQueryable();
 
-            var problems = await GetAllCouncils().Where(e => ids.Contains(e.CouncilID)).ToListAsync();  
-            
-
+            var problems = await query.Where(e => Ids.Contains(e.CouncilID)).ToListAsync();  
             if (problems == null)
             {
                 return NotFound();
@@ -71,16 +179,7 @@ namespace IPG.Projeto.API.Controllers
 
             return Ok(problems);
         }
-        // async query cenas .. melhor alternativa até agora
-        public IQueryable<Problem> GetAllCouncils()
-        {
-
-            return _context.Problems.Include("Council").AsQueryable();    
-
-            //return _context.Problems.AsQueryable();
-
-
-        }
+        
 
         // PUT: api/Problems/5
         [HttpPut("{id}")]

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 using static IPG.Projeto.API.Classes;
 
 namespace IPG.Projeto.API
@@ -84,6 +85,25 @@ namespace IPG.Projeto.API
             });
 
             services.AddMvc();
+
+            // add Swagger API
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Problemas.Online API",
+                    Description = "Projeto IPG, ASP.NET Core 2.0 Web API",
+                    TermsOfService = "None",
+                    Contact = new Contact()
+                    {
+                        Name = "Daniel Mendes",
+                        Email = "netrapida@live.com.pt",
+                        Url = "https://problemas.online/"
+                    }
+                });
+            });
+
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -104,6 +124,12 @@ namespace IPG.Projeto.API
                 .Initialize();
 
             app.UseMvc();
+
+            // Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+            });
         }
     }
 }
