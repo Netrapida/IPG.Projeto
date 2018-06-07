@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage BackgroundColor="#ffffff" Title="Me" xmlns="http://xamarin.com/schemas/2014/forms" 
+<ContentPage Title="Me" xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
@@ -131,7 +131,13 @@
                     </Button.FontSize>
                 </Button>-->
                
-                <controls:CarouselViewControl Orientation="Horizontal" InterPageSpacing="10" Position="{Binding myPosition}" ItemsSource="{Binding myItemsSource}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                
+                
+                
+                
+                
+                
+                <!--<controls:CarouselViewControl Orientation="Horizontal" InterPageSpacing="10" Position="{Binding myPosition}" ItemsSource="{Binding myItemsSource}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                     <controls:CarouselViewControl.ItemTemplate>
                         <DataTemplate>
                             <StackLayout Orientation="Vertical" Padding="15,10,5,5">
@@ -162,8 +168,14 @@
                             </StackLayout>
                         </DataTemplate>
                     </controls:CarouselViewControl.ItemTemplate>
-                </controls:CarouselViewControl>
+                </controls:CarouselViewControl>-->
 
+                
+                
+                
+                
+                
+                
                 <BoxView HeightRequest="1" Margin="15,0,5,0" BackgroundColor="#eeeeee" />
                 <StackLayout Orientation="Vertical" Padding="15,10,5,20" BackgroundColor="#ffffff">
                     <StackLayout Orientation="Horizontal">

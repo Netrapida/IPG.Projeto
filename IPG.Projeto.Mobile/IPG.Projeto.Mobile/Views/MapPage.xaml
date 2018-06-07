@@ -248,7 +248,7 @@
                         <On Platform="Android" Value="5,2,5,5" />
                     </OnPlatform>
                 </ContentView.Margin>
-                <Button HeightRequest="70" BackgroundColor="#ffb636" BorderRadius="0" TextColor="#ffffff" Text="Enviar" Clicked="AddItem_Clicked">
+                <Button HeightRequest="70" BackgroundColor="#ffb636" BorderRadius="0" TextColor="White" Text="Enviar" Clicked="AddItem_Clicked">
                     <Button.FontSize>
                         <OnPlatform x:TypeArguments="x:Double">
                             <On Platform="iOS" Value="24" />

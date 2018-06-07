@@ -58,6 +58,7 @@ namespace IPG.Projeto.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                council.CouncilID = council.Id;
                 _context.Add(council);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
